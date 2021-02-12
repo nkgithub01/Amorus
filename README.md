@@ -7,6 +7,6 @@
   <li> Users are connected via edges based on where they live, where they go, and their common interests </li>
   <li> The strength of interaction between users it determined by a linear regression model for each user that outputs a compatability score </li>
   <li>The interactions from each user propagates throughout the graph (person A becomes friends with person B via common friend C) </li>
-  <li> Through modeling this spread, Amorus is able to determine the chance of meeting soulmates (Those with a high compatability score determined by Lin Reg) </li>
+  <li> Through modeling this spread, Amorus is able to determine the chance of meeting soulmates (Those with a high compatability score determined by Linear Regression on their features such as their interests and traits) </li>
   </ul>
   
