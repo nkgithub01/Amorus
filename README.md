@@ -1,4 +1,4 @@
-## Amorus is an app designed to find the probability of finding other lovers.
+## Amorus is an app designed to find the probability of finding lovers
 
 ## Users in the app form a graph where: 
   <ul>
