@@ -1,4 +1,5 @@
-## Amorus is an app designed to find the probabilities of connecting with other potential lovers.
+## Amorus is an app designed to find the probability of finding other lovers.
+
 ## Users in the app form a graph where:
   ### - Each user is a vertex
   ### - Users are connected via edges based on where they live, where they go, and their common interests
