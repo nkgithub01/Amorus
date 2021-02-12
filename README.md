@@ -2,7 +2,7 @@
 
 ## Users in the app form a graph where: 
   <ul>
-  <li> Since love/amor spreads like a virus, the overall app is a blending of the words amor and virus -> <a href= "http://elijahhuang.com" target = "_blank"><button> <strong><em>Amorus</em></strong> </button></a> </li>
+  <li> Since love/amor spreads like a virus, the overall app is a blending of the words amor and virus -> <a href= "http://elijahhuang.com" target = "_blank"> <strong><em>Amorus</em></strong> </a> </li>
   <li> Each user is a vertex </li>
   <li> Users are connected via edges based on where they live, where they go, and their common interests </li>
   <li> The strength of interaction between users it determined by a linear regression model for each user that outputs a compatability score </li>
