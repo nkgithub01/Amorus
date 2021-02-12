@@ -5,5 +5,5 @@
   ### - The strength of interaction between users it determined by a linear regression model
   ###   for each user that outputs a compatability score
   ### - The interactions from each user propagates throughout the graph (person A becomes friends with person B via common friend C)
-  ###  - Since love/amor spreads like a virus, the overall app is a blending of the words amor and virus -> **__Amorus__**
+  ###  - Since love/amor spreads like a virus, the overall app is a blending of the words amor and virus -> **_Amorus_**
   
