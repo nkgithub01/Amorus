@@ -1,0 +1,34 @@
+div.carousel-inner {
+    height: 560px;
+    width: 100%;
+    overflow: hidden;
+}
+
+nav {
+    left: 0;
+    padding: 15px;
+    background-color: #ff5c8a;
+}
+
+body {
+    background-color: white;
+}
+
+.col-md {
+    text-align: center;
+    padding-inline: 20px;
+    padding-bottom: 30px;
+}
+
+i {
+    color: #ff99ac;
+    font-size: 100px;
+}
+
+.topright {
+    position: absolute;
+    font-size: 43px;   
+    top: 10%;
+    left: 45%;
+    justify-self: right;
+  }
