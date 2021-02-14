@@ -4,11 +4,9 @@ from tensorflow.python.util import deprecation
 deprecation._PRINT_DEPRECATION_WARNINGS = False
 import pandas as pd
 import tensorflow as tf
-from sklearn.linear_model import LinearRegression
+import random
 import json
 from joblib import dump, load
-import random
-
 
 # the id of a user is just their index / row-1 in the dataframe population
 # first 2 elements are name and neighbors, rest are the trainable features
@@ -81,9 +79,6 @@ categories = { 'sex' : ['m', 'f'],
     'speaks' : ["english", "spanish", "french", "german", "sign language", "italian", "japanese", "russian", "gujarati",
                 "hindi", "chinese", "sanskrit", "portuguese"]}
 
-categories = {key: dict(zip(categories[key], range(1,len(categories[key])+1))) for key in categories.keys()}
-categories_rev = {key: dict(enumerate(categories[key],start =1)) for key in categories.keys()}
-print(categories, categories_rev)
 # make sure the nan values are filled in or you will get errors with the .train function (expects some type)
 for feature in features:
     if feature in categories:
@@ -94,30 +89,40 @@ for feature in features:
 
 # linear regression section
 ###################################################################################################################
-#alters user_features so that categorical features are numerical
-def make_features(user_features):
-    new_features = []
-    for i in range(2, len(features)-1):
-        if features[i] in categories:
-            # categories in this feature column where order is sometimes intentional
-            if user_features[i] in categories[features[i]]:
-                # included in some ordering
-                new_features.append(float(categories[features[i]][user_features[i]]))
-            else:
-                # belongs to other which we default to 0
-                new_features.append(float(0))
-        else:
-            # the datatype is numerical
-            new_features.append(float(user_features[i]))
+feature_columns = []  # list of feature columns
+for feature in features[2:-1]:
+    if feature in categories:
+        vocabulary = categories[feature]  # categories in this feature column where order is sometimes intentional
+        feature_columns.append(tf.feature_column.categorical_column_with_vocabulary_list(feature, vocabulary))
+    else:
+        # the datatype is a int
+        feature_columns.append(tf.feature_column.numeric_column(feature, dtype=tf.float32))
 
-    return new_features
+# function that makes an input function for training/predicting
+# returns an input function which creates a dataset everytime it's called
+# which can be used later with linear_est and feature columns
+def make_input_function(training_examples, love_interests, num_epochs=10, shuffle=True, batch_size=5):
+    def input_function():
+        # convert from pandas representation of csv data to tensors
+        ds = tf.data.Dataset.from_tensor_slices((dict(training_examples), love_interests))  # takes a tuple
+        if shuffle:
+            ds = ds.shuffle(buffer_size=1000)
+        ds = ds.batch(batch_size).repeat(num_epochs)
 
-def make_features_all(user_features_all):
-    new_features_all = []
-    for user_features in user_features_all:
-        new_features_all.append(make_features(user_features))
+        return ds
 
-    return new_features_all
+    return input_function
+
+def create_lin_classifier(training_examples, love_interests, num_epochs=10, shuffle=True, batch_size=5):
+    train_func = make_input_function(training_examples, love_interests, num_epochs, shuffle, batch_size)
+    linear_classifier = tf.estimator.LinearClassifier(feature_columns=feature_columns)
+    # train the linear classifier
+    linear_classifier.train(train_func)
+
+    return linear_classifier
+
+def predict(linear_classifier, features):
+    return list(linear_classifier.predict(make_input_function(pd.DataFrame([features[2:-1]]), [0], 1, False, 1)))[0]['probabilities'][1]
 ###################################################################################################################
 
 
@@ -130,7 +135,7 @@ class User:
         # linear regression model
         self.linear_classifier = None
 
-        '''
+
         # setup person's features
         if user_features is None:
             # user needs to input their personal features
@@ -139,7 +144,7 @@ class User:
             inp = input().strip()
             self.features['name'] = inp
 
-            for feature in features[2:-1]:
+            for feature in features[2:]:
                 if feature in categories:
                     # categorical feature
                     print("\nEnter the number of the option that best describes you")
@@ -147,7 +152,7 @@ class User:
                     for a, b in enumerate(categories[feature]):
                         print(str(a) + '. ' + b)
                     inp = int(input())
-                    self.features[feature] = categories_rev[feature][inp]
+                    self.features[feature] = categories[feature][inp]
 
                 else:
                     # numerical feature
@@ -183,14 +188,14 @@ class User:
             # just create this object of type User using the previously stored user_features
             self.features_list = user_features
             self.feature_list = {features[i]: user_features[i] for i in range(len(features))}
-        '''
+
         # setup linear_classifier
         if linear_classifier is None:
             # make new linear classifier
             # user needs to input who they like to create this linear classifier
 
             # user input determines the user's love interest in some random users
-            training_examples = population.sample(min(population.shape[0], 20))
+            training_examples = population.sample(min(population.shape[0], 20)).iloc[:, 2:-1]  # first 2 features not trainable
             love_interests = [0]*training_examples.shape[0]
             print('''\nLet's find out who you like!
 For each person, enter a number from 0 to 100:
@@ -199,9 +204,9 @@ For each person, enter a number from 0 to 100:
             for i in range(training_examples.shape[0]):
                 example = list(training_examples.iloc[i])
                 print("\nDescription:\n")
-                for j in range(2, len(features)-1):
+                for j in range(2, len(features)):
                     feature = features[j]
-                    print(feature + ':', example[j])
+                    print(feature + ':', example[j-2])
 
                 while True:
                     print("\nPlease enter an integer between 0 and 100:")
@@ -216,31 +221,25 @@ For each person, enter a number from 0 to 100:
                     except ValueError:
                         pass
 
-            # convert dataframe to list of lists and then convert the categorical data to numerical
-            training_examples = make_features_all([list(training_examples.iloc[i]) for i in range(training_examples.shape[0])])
-            self.linear_classifier = LinearRegression()
-            self.linear_classifier.fit(training_examples, love_interests)
+            self.linear_classifier = create_lin_classifier(training_examples, love_interests)
 
-
+            '''
             # testing:
-            preds = self.linear_classifier.predict(training_examples)
-            random_sample = population.sample(20)
-            random_sample = make_features_all([list(random_sample.iloc[i]) for i in range(20)])
-            preds2 = self.linear_classifier.predict(random_sample)
-
+            preds = list(self.linear_classifier.predict(make_input_function(population.sample(min(population.shape[0], 20)).iloc[:, 2:], love_interests, 1, False, 1)))
+            preds2 = list(self.linear_classifier.predict(make_input_function(training_examples, love_interests, 1, False, 1)))
 
             print("Predictions for the 20 people you entered")
-            for i in preds:
+            for i in [pred['probabilities'][1] for pred in preds2]:
                 print(i)
             print("Average predicted percentage that you are attracted to the 20 people you entered:",
-                  sum(preds) / 20)
+                  sum([pred['probabilities'][1] for pred in preds2]) / 20)
 
             print("\nPredictions for 20 random people:")
-            for i in preds2:
+            for i in [pred['probabilities'][1] for pred in preds]:
                 print(i)
             print("Average predicted percentage that you are attracted to 20 random people:",
-                  sum(preds2)/20)
-            return
+                  sum([pred['probabilities'][1] for pred in preds])/20)
+            '''
         else:
             # just create the linear classifier using the previously stored linear classifier
             self.linear_classifier = linear_classifier
@@ -303,6 +302,8 @@ def add_random_neighbors_and_lin_class_users(population, max_friends=25, num_dis
 
 
 
+
+
 def add_preexisting_users():
 
     global added_preexisting_data
@@ -320,12 +321,11 @@ def add_new_user():
 
 
 # add cracked bfs nitin C^(length of the path) * product of 1/(all compatibilities(both directions))
-def matchmake(user_id):
+def matchmake():
     pass
 
 
 def main():
-    User()
     add_random_neighbors_and_lin_class_users(population, 1, 1, 5)
     #add_preexisting_users()
     #add_new_user()
