@@ -1,0 +1,11 @@
+{
+	"name": "Amorus",
+	"version": "1.0.0",
+	"scripts": {
+		"start": "flask run"
+	},
+	"dependencies": {
+	},
+	"author": "Arhan Jain, Elijah Huang, and Nitin Krishna",
+	"license": "ISC"
+}
