@@ -86,3 +86,8 @@ div {
     padding-inline: 60px;  
     line-height: 2.2;
 }
+
+.whiteText {
+    color: white;
+    font-weight: bold;
+}

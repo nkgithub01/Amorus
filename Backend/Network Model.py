@@ -7,7 +7,7 @@ import tensorflow as tf
 
 # the id of a user is just their index / row-1 in the dataframe population
 # first 2 elements are name and neighbors, rest are the trainable features
-population = pd.read_csv("population.csv", na_values=['nan'])
+population = pd.read_csv(r"C:\Users\jmamt\OneDrive\Documents\GitHub\Amorus\Backend\population.csv", na_values=['nan'])
 
 curr_id = 0
 

@@ -26,13 +26,16 @@ def doLogin():
     isSignedIn = True
 
     if path.exists("/loginData.csv"):
-        return "hello"
+        #request username from the csv and add it to the handle
+        #load in all the user data
+        return render_template("homeLoggedIn.html")
     else:
-        d = {'AmorusHandle': [], 'Password': []}
+        d = {'AmorusHandle': [request.form['handle']], 'Password': [request.form['password']]}
         df = pd.DataFrame(data=d)
         df.to_csv('loginData.csv')
+        return render_template("userDataInput.html", handle=request.form['handle'])  
+
     #do bunch of sign in shit   
-    return render_template("homeLoggedIn.html", handle=request.form['handle'])  
 
 @app.route("/beginSearch", methods=['GET', 'POST'])
 def beginSearch():

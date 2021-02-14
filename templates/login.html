@@ -19,7 +19,7 @@
  
          <title>Amorus - Login</title>
     </head>
-    <body>
+    <body style="background-color: #ff99ac;">
 
         <nav id="homeNavBar" class="navbar navbar-expand-md navbar-dark fixed-top">
             <a class="navbar-brand" href="/">
@@ -49,23 +49,36 @@
         <div style="margin-top: 90px;"></div>
 
         <!--Display Login Guiding Text-->
-        <h2>Login or Sign Up</h2>
-        <em>Enter credentials and a new account will be made if no matching handle is found.</em> 
+        <h2 class="whiteText" style="text-align: center; padding-top: 60px;">Login or Sign Up</h2>
+
+        
+
         <!--Take Login Credeentials-->
         <form action="/doLogin" method="POST" role="form">
-            <div class="form-group">
-                <label>Amorus Handle:</label>
-                <input class="form-control" id="handle" name="handle">
-                <small class="form-text text-muted">Type your Amorus Handle here <br></small> 
+
+            <!--Radio Buttons for Signup/Signin-->
+            <div class="btn-group-toggle" data-toggle="buttons" style="text-align: center;padding-top: 20px;">
+                <label class="btn btn-outline-dark">
+                <input type="checkbox" value="isNewAccount" unchecked autocomplete="off"> New Account
+                </label>
+            </div>
+            
+            <!--Spacer -->
+            <div style="padding-top: 40px;"></div>
+            <div class="form-group" style="text-align: center;">
+                <label class="whiteText" style="padding-top: 30 px">Amorus Handle:</label>
+                <input class="form-control" id="handle" name="handle" style="margin:auto; width: 200px;">
+                <em class="form-text text-muted">Type your Amorus Handle here <br></em> 
 
                 <div style="margin-top: 30px"></div>
 
-                <label>Password:</label>
-                <input class="form-control" id="password" name="password">
-                <small class="form-text text-muted">Type your account password here</small> 
+                <label class="whiteText" >Password:</label>
+                <input class="form-control" id="password" name="password" style="margin:auto; width: 200px;">
+                <em class="form-text text-muted">Type your account password here</em> 
             </div>
-            <div style="margin-top: 20px;"></div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <div style="margin-top: 20px;text-align: center;">
+                <button type="submit" class="btn btn-light" style="margin-inline: 0 auto;">Submit</button>
+            </div>
         </form>
 
     </body>
