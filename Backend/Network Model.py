@@ -4,8 +4,6 @@ from tensorflow.python.util import deprecation
 deprecation._PRINT_DEPRECATION_WARNINGS = False
 import pandas as pd
 import tensorflow as tf
-import matplotlib.pyplot as plt
-from six.moves import urllib
 
 # the id of a user is just their index / row-1 in the dataframe population
 # first 2 elements are name and neighbors, rest are the trainable features
@@ -32,7 +30,7 @@ features = list(population.columns)
 
 # category/ vocabulary list for features that have categorical data
 # the order matters for some features (categories listed in ascending order of drinking level for example)
-categories = { 'sex' : ['male', 'female'],
+categories = { 'sex' : ['m', 'f'],
      'status' : ['single', 'seeing someone'],
     'orientation' : ['straight', 'gay'],
      'body_type' : ['skinny', 'thin', 'average', 'fit', 'athletic', 'curvy', 'a little extra', 'full figured', 'jacked'],
@@ -40,14 +38,31 @@ categories = { 'sex' : ['male', 'female'],
               'strictly anything', 'mostly anything', 'anything'],
      'drinks' : ['not at all', 'rarely', 'socially', 'often', 'desperately'],
     'drugs' : ['never', 'sometimes'],
-     'education' : ['high school', 'dropped out', 'working', 'graduated'],
+     'education' : ['high school', 'graduated from high school','working on college/university',
+                    'graduated from college/university', 'working on masters program', 'graduated from masters program',
+                    'working on ph.d program', 'graduated from ph.d program', 'dropped out of space camp',
+                    'working on space camp', 'graduated from space camp'],
     'ethnicity' : ['white', 'native', 'middle', 'hispanic', 'black', 'asian', 'pacific', 'indian'],
      'job' : ['transportation', 'hospitality', 'student', 'artistic', 'computer', 'science', 'banking', 'sales',
                     'medicine', 'executive', 'clerical', 'construction', 'political', 'law', 'education', 'military'],
     'offspring' : ["doesn't want", "might want", "doesn't have kids", "has", "wants"],
      'pets' : ["likes dogs and cats", "likes dogs", "likes cats", "has dog", "has cat"],
-    'religion' : ['agnostic', 'atheism', 'buddhism', 'catholicism', 'very serious', 'somewhat serious',
-                  'not too serious', 'laughing'],
+    'religion' : ['agnosticism and laughing about it', 'agnosticism but not too serious about it',
+                  'agnosticism and somewhat serious about it', 'agnosticism and very serious about it', 'agnosticism',
+                  'atheism and laughing about it', 'atheism but not too serious about it',
+                  'atheism and somewhat serious about it', 'atheism and very serious about it', 'atheism',
+                  'christianity and laughing about it', 'christianity but not too serious about it',
+                  'christianity and somewhat serious about it', 'christianity and very serious about it', 'christianity',
+                  'catholicism and laughing about it', 'catholicism but not too serious about it',
+                  'catholicism and somewhat serious about it', 'catholicism and very serious about it', 'catholicism',
+                  'buddhism and laughing about it', 'buddhism but not too serious about it',
+                  'buddhism and somewhat serious about it', 'buddhism and very serious about it', 'buddhism',
+                  'judaism and laughing about it', 'judaism but not too serious about it',
+                  'judaism and somewhat serious about it', 'judaism and very serious about it', 'judaism',
+                  'hinduism and laughing about it', 'hinduism but not too serious about it',
+                  'hinduism and somewhat serious about it', 'hinduism and very serious about it', 'hinduism'
+                  'other and laughing about it', 'other but not too serious about it',
+                  'other and somewhat serious about it', 'other and very serious about it', 'other'],
      'smokes' : ["no","trying to quit", "sometimes", "when drinking", "yes"],
     'speaks' : ["english", "spanish", "french", "german", "sign language", "italian", "japanese", "russian", "gujarati",
                 "hindi", "chinese", "sanskrit", "portuguese"]}
@@ -75,8 +90,6 @@ def make_input_function(training_examples, love_interests, num_epochs=10, shuffl
 
 class User:
     def __init__(self, user_features = 0, linear_classifier = 0):
-        # if this instance of User was created properly
-        self.proper_creation = False
         # dict of features that have user_features as values
         self.features = dict(zip(features, [None]*len(features)))
         # user features list
@@ -84,6 +97,7 @@ class User:
         # linear regression model
         self.linear_classifier = None
 
+        '''
         # setup person's features
         if user_features == 0:
             # user needs to input their personal features
@@ -136,7 +150,7 @@ class User:
             # just create this object of type User using the previously stored user_features
             self.features_list = user_features
             self.feature_list = {features[i]: user_features[i] for i in range(len(features))}
-
+        '''
         # setup linear_classifier
         if linear_classifier == 0:
             # make new linear classifier
@@ -156,15 +170,18 @@ For each person, enter a number from 0 to 100:
                     feature = features[j]
                     print(feature + ':', example[j-2])
 
-                inp = input().strip()
-                try:
-                    inp = int(inp)
-                except ValueError:
-                    return
-                if not (0 <= inp <= 100):
-                    return
-
-                love_interests[i] = inp/100
+                while True:
+                    print("\nPlease enter an integer between 0 and 100:")
+                    inp = input().strip()
+                    try:
+                        inp = int(inp)
+                        if not (0 <= inp <= 100):
+                            pass
+                        else:
+                            love_interests[i] = inp / 100
+                            break
+                    except ValueError:
+                        pass
 
             feature_columns = []  # list of feature columns
             for feature in features[2:]:
@@ -183,9 +200,23 @@ For each person, enter a number from 0 to 100:
 
             self.linear_classifier = tf.estimator.LinearClassifier(feature_columns=feature_columns)
             self.linear_classifier.train(train_function)
+
+            # testing:
             preds = list(self.linear_classifier.predict(make_input_function(population.sample(min(population.shape[0], 20)).iloc[:, 2:], love_interests, 1, False, 1)))
+            preds2 = list(self.linear_classifier.predict(make_input_function(training_examples, love_interests, 1, False, 1)))
+
+            print("Predictions for the 20 people you entered")
+            for i in [pred['probabilities'][1] for pred in preds2]:
+                print(i)
+            print("Average predicted percentage that you are attracted to the 20 people you entered:",
+                  sum([pred['probabilities'][1] for pred in preds2]) / 20)
+
+            print("\nPredictions for 20 random people:")
             for i in [pred['probabilities'][1] for pred in preds]:
                 print(i)
+            print("Average predicted percentage that you are attracted to 20 random people:",
+                  sum([pred['probabilities'][1] for pred in preds])/20)
+
         else:
             # just create the linear classifier using the previously stored linear classifier
             pass
@@ -202,10 +233,12 @@ For each person, enter a number from 0 to 100:
             else:
                 names_to_id[name] = [id]
 
+        print("\nYou've been Added!")
+
 # ONLY ADD NEW USERS AFTER LOADING PREEXISTING DATA (will mess up indexing/ids if you don't)
 def add_new_user():
     User()
-    print("DONE!")
+
 
 def add_random_user():
     pass
