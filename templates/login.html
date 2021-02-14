@@ -11,17 +11,44 @@
          <!--import js bundle-->
          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
          
-          <!--Import CSS File-->
-          <link rel="stylesheet" href="C:\Users\jmamt\OneDrive\Documents\GitHub\Amorus\css\styles.css">
- 
           <!--Import Awesome Icons-->
           <link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
- 
+        
+        <!--Import CSS File-->
+        <link rel="stylesheet" href="static/css/styles.css">    
  
          <title>Amorus - Login</title>
     </head>
     <body>
 
+        <nav id="homeNavBar" class="navbar navbar-expand-md navbar-dark fixed-top">
+            <a class="navbar-brand" href="/">
+                <h1 style="font-size: 50px;">Amorus</h1>  <!--Adding Brand Name to NavBar-->
+            </a> 
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!--Tabs in the NavBar-->
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="matchmaker">Find Your Date</a>
+                        <a class="nav-item nav-link" href="#">Reservations</a>
+                        <a class="nav-item nav-link" href="#">Personalized Gifts</a>
+                        
+                        <a class="btn btn-light me-auto" type="submit" style="right: 0;" href="/signIn">Login</a>
+                        
+                    </div>
+                </div>
+            </div>
+
+        </nav>
+
+        <!--Spacer Division-->
+        <div style="margin-top: 90px;"></div>
+
+        <!--Display Login Guiding Text-->
         <h2>Login or Sign Up</h2>
         <em>Enter credentials and a new account will be made if no matching handle is found.</em> 
         <!--Take Login Credeentials-->
@@ -29,12 +56,15 @@
             <div class="form-group">
                 <label>Amorus Handle:</label>
                 <input class="form-control" id="handle" name="handle">
-                <small class="form-text text-muted">Type your Amorus Handle here</small> 
+                <small class="form-text text-muted">Type your Amorus Handle here <br></small> 
+
+                <div style="margin-top: 30px"></div>
 
                 <label>Password:</label>
                 <input class="form-control" id="password" name="password">
                 <small class="form-text text-muted">Type your account password here</small> 
             </div>
+            <div style="margin-top: 20px;"></div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
 

@@ -11,10 +11,79 @@
         <!--import js bundle-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
         
+        <!--Import Awesome Icons-->
+        <link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
+
+        <!--Import CSS File-->
+        <link rel="stylesheet" href="static/css/styles.css">
 
     </head>
     <body>
-        <p>Hello Elijah-sama</p>   
-        <p>{{messageForEli}}</p>
+
+        <nav id="homeNavBar" class="navbar navbar-expand-md navbar-dark fixed-top">
+            <a class="navbar-brand" href="/">
+                <h1 style="font-size: 50px;">Amorus</h1>  <!--Adding Brand Name to NavBar-->
+            </a> 
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!--Tabs in the NavBar-->
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="#">Find Your Date</a>
+                        <a class="nav-item nav-link" href="#">Reservations</a>
+                        <a class="nav-item nav-link" href="#">Personalized Gifts</a>
+                        
+                        <a class="nav-item nav-link me-auto" href="/" id="accountName">Sign out of {{ handle }}</a>
+                        
+                    </div>
+                </div>
+            </div>
+
+        </nav>
+
+        <!--Spacer Under Carousel-->
+        <div style="margin-top: 90px;"></div>
+
+
+        <!--Container divided in 2-->
+        <div class="container-fluid">
+            <div class="row">
+            
+            
+                <div class="col-lg" style=" background-color:  #ff99ac;">
+                    <h2 id="findMatchText">Build Yourself A Network of People With Just The Click Of A Button</h2>
+                    <div class="row" style="align-items: center;">
+                        
+                        <div class="col-sm">
+                            <i class="fas fa-user" id="matchmakeIcons"></i>
+                        </div>
+
+                        <div class="col-sm">
+                            <i class="fas fa-comment" id="matchmakeIcons"></i>
+                        </div>
+
+                        <div class="col-sm">
+                            <i class="fas fa-heart" id="matchmakeIcons"></i>
+                        </div>
+                    </div>
+                </div>
+                
+        
+
+                <div class="col-lg">
+                    <!--replace text with background image-->
+                    <h1 style="color: #ff85a1; font-weight: bold; padding-top: 60px;">Start Your Search</h1>
+
+                    <form action="/beginSearch" method="POST" role="form" style="padding-bottom: 60px; padding-top: 100px;">  
+                        <button type="submit" class="btn btn-danger">Begin Search</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>  
+
     </body>
 </html>

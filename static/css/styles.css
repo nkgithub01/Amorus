@@ -15,9 +15,16 @@ body {
 }
 
 #specialFont{
-    padding-top: 30px;
+    color: white;
+    padding-top: 27px;
     text-align: center;
-    font-family: "Helvetica, sans-serif";
+    font-weight: lighter;
+}
+
+#accountName {
+    font-weight: bold;
+    font-size: 18px;
+    color: whitesmoke;
 }
 
 .col-md {
@@ -26,7 +33,14 @@ body {
     padding-bottom: 30px;
 }
 
-i {
+.col-sm {
+    justify-items: center;
+}
+
+.col-lg {
+    text-align: center;
+}
+#frontPageIcons {
     color: #ff99ac;
     font-size: 100px;
 }
@@ -37,13 +51,38 @@ i {
     top: 10%;
     left: 45%;
     justify-self: right;
+    font-weight:bolder;
+    color:white;
 }
 
 div {
     overflow: hidden;
 }
 
-  #underCarousel {
-      height: 100px;
-      background-color: #f7cad0;
-  }
+#matchmakeIcons {
+    color:#ff0a54 ;
+    justify-content: center;
+    font-size: 40px;
+    padding-bottom: 60px;
+}
+
+
+#underCarousel {
+    height: 100px;
+    background-color: #ff85a1;
+}
+
+.nav-item {
+    margin-inline: 50px;
+    vertical-align: middle;
+}
+
+#findMatchText {
+    vertical-align: middle;
+    color: whitesmoke;
+    font-weight: 400;
+    padding-top: 40px;
+    padding-bottom: 60px;
+    padding-inline: 60px;  
+    line-height: 2.2;
+}

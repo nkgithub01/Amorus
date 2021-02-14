@@ -23,40 +23,40 @@
     </head>
     <body>
 
-        <!--Creating Navigation Bar-->
-        <nav id="homeNavBar" class="navbar navbar-expand-md navbar-dark fixed-top">
-            <a class="navbar-brand" href="#">
-                <h1 style="font-size: 50px;">Amorus</h1>  <!--Adding Brand Name to NavBar-->
-            </a> 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+      <!--Creating Navigation Bar-->
+      <nav id="homeNavBar" class="navbar navbar-expand-md navbar-dark fixed-top">
+          <a class="navbar-brand" href="#">
+              <h1 style="font-size: 50px;">Amorus</h1>  <!--Adding Brand Name to NavBar-->
+          </a> 
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
 
-            <!--Tabs in the NavBar-->
-            <div class="container-fluid">
-                <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                    <div class="navbar-nav">
-                        <a class="nav-item nav-link" href="matchmake.html">Find Your Date</a>
-                        <a class="nav-item nav-link" href="#">Reservations</a>
-                        <a class="nav-item nav-link" href="#">Personalized Gifts</a>
-                        
-                        <a class="btn btn-light" type="submit" style="right: 0;" href="/signIn">Login</a>
-                        
-                    </div>
-                </div>
-            </div>
+          <!--Tabs in the NavBar-->
+          <div class="container-fluid">
+              <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                  <div class="navbar-nav">
+                      <a class="nav-item nav-link" href="matchmaker">Find Your Date</a>
+                      <a class="nav-item nav-link" href="#">Reservations</a>
+                      <a class="nav-item nav-link" href="#">Personalized Gifts</a>
+                  
+                      <a class="btn btn-light me-auto" type="submit" style="right: 0;" href="/signIn">Login</a>
+                      
+                  </div>
+              </div>
+          </div>
 
-        </nav>
+      </nav>
 
         <!--Spacer Division-->
         <div style="margin-top: 90px;"></div>
 
-        <!--Carousel of Images-->
+        <!--Carousel of Images (RESIZE IMAGES TO BE SAME DIMENSIONS FOR SMOOTH AESTHETIC)-->
         <div id="carouselSlide" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
           <div class="carousel-item active">
             <img class="d-block" src="static/images/love.jpg" alt="dog-profile" style="max-width: 100%; max-height: 100%;">
-            <div class="topright">Connect with People Today Using Amors</div>
+            <div class="topright">Meet People Today Using Amorus</div>
           
           </div>
           <div class="carousel-item">
@@ -83,19 +83,19 @@
           <div class="row">
 
             <div class="col-md">
-              <i class="fab fa-gripfire" ></i>
+              <i class="fab fa-gripfire" id="frontPageIcons" ></i>
               <div style="margin-top: 40px;"></div>      
                 <h2>Over 60k Active Users</h2>
             </div>
 
             <div class="col-md">
-              <i class="fas fa-tasks"></i>
+              <i class="fas fa-tasks" id="frontPageIcons"></i>
               <div style="margin-top: 40px;"></div>      
               <h2>Quick & Easy to Use</h2>
             </div>
 
             <div class="col-md">
-              <i class="fas fa-chart-pie"></i>   
+              <i class="fas fa-chart-pie" id="frontPageIcons"></i>   
               <div style="margin-top: 40px;"></div>      
               <h3>State of the Art Match Finding Algorithm</h3>
             </div> 
@@ -105,7 +105,7 @@
 
             
             <div style="margin-top: 400px;"></div>      
-
+        <!--Fill with contact us/more info about how it works-->
 
         </div>
         
