@@ -336,7 +336,7 @@ def add_random_neighbors_and_lin_class_users(population, max_friends=25, num_dis
         User(list(population.loc[id]), linear_classifiers[id], id)
 
     # rewrite to the csv file
-    population.to_csv("population.csv")
+    population.to_csv("population.csv", index=False)
 
 
 def add_preexisting_users():
