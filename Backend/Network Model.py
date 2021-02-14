@@ -74,6 +74,7 @@ for feature in features:
     else:
         population[feature].fillna(0, inplace=True)
 
+
 #function that makes an input function for training/predicting
 def make_input_function(training_examples, love_interests, num_epochs=10, shuffle=True, batch_size=5):
     def input_function():
@@ -97,7 +98,7 @@ class User:
         # linear regression model
         self.linear_classifier = None
 
-        '''
+
         # setup person's features
         if user_features == 0:
             # user needs to input their personal features
@@ -150,7 +151,7 @@ class User:
             # just create this object of type User using the previously stored user_features
             self.features_list = user_features
             self.feature_list = {features[i]: user_features[i] for i in range(len(features))}
-        '''
+
         # setup linear_classifier
         if linear_classifier == 0:
             # make new linear classifier
@@ -159,7 +160,7 @@ class User:
             # user input determines the user's love interest in some random users
             training_examples = population.sample(min(population.shape[0], 20)).iloc[:, 2:]  # first 2 features not trainable
             love_interests = [0]*training_examples.shape[0]
-            print('''\nLet's fine out who you like!
+            print('''\nLet's find out who you like!
 For each person, enter a number from 0 to 100:
 0 means that this person is not attractive at all
 100 means they are as attractive as a person can possibly be''')
@@ -201,6 +202,7 @@ For each person, enter a number from 0 to 100:
             self.linear_classifier = tf.estimator.LinearClassifier(feature_columns=feature_columns)
             self.linear_classifier.train(train_function)
 
+            '''
             # testing:
             preds = list(self.linear_classifier.predict(make_input_function(population.sample(min(population.shape[0], 20)).iloc[:, 2:], love_interests, 1, False, 1)))
             preds2 = list(self.linear_classifier.predict(make_input_function(training_examples, love_interests, 1, False, 1)))
@@ -216,7 +218,7 @@ For each person, enter a number from 0 to 100:
                 print(i)
             print("Average predicted percentage that you are attracted to 20 random people:",
                   sum([pred['probabilities'][1] for pred in preds])/20)
-
+            '''
         else:
             # just create the linear classifier using the previously stored linear classifier
             pass
@@ -235,6 +237,7 @@ For each person, enter a number from 0 to 100:
 
         print("\nYou've been Added!")
 
+
 # ONLY ADD NEW USERS AFTER LOADING PREEXISTING DATA (will mess up indexing/ids if you don't)
 def add_new_user():
     User()
@@ -245,6 +248,10 @@ def add_random_user():
 
 
 def add_preexisting_user():
+    pass
+
+# add cracked bfs nitin C^(length of the path) * product of 1/(all compatablilites(both directions))
+def matchmake():
     pass
 
 
