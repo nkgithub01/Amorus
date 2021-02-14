@@ -33,7 +33,7 @@
             <div class="container-fluid">
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <div class="navbar-nav">
-                        <a class="nav-item nav-link" href="matchmaker">Find Your Date</a>
+                        <a class="nav-item nav-link" href="matchmaker">Find Companions</a>
                         <a class="nav-item nav-link" href="#">Reservations</a>
                         <a class="nav-item nav-link" href="#">Personalized Gifts</a>
                         
@@ -55,31 +55,19 @@
 
         <!--Take Login Credeentials-->
         <form action="/doLogin" method="POST" role="form">
-
-            <!--Radio Buttons for Signup/Signin-->
-            <div class="btn-group-toggle" data-toggle="buttons" style="text-align: center;padding-top: 20px;">
-                <label class="btn btn-outline-dark">
-                <input type="checkbox" value="isNewAccount" unchecked autocomplete="off"> New Account
-                </label>
-            </div>
             
             <!--Spacer -->
             <div style="padding-top: 40px;"></div>
-            <div class="form-group" style="text-align: center;">
-                <label class="whiteText" style="padding-top: 30 px">Amorus Handle:</label>
-                <input class="form-control" id="handle" name="handle" style="margin:auto; width: 200px;">
-                <em class="form-text text-muted">Type your Amorus Handle here <br></em> 
 
-                <div style="margin-top: 30px"></div>
+            <!--CHECK IF THESE ARE EMPTY!-->    
+            <div class="form-group" style="text-align: center;"> 
+                <label class="whiteText" style="padding-top: 30 px">Amorus ID:</label>
+                <input class="form-control" id="id" placeholder="Amorus ID" name="id" style="margin:auto; width: 200px;">
 
-                <label class="whiteText" >Password:</label>
-                <input class="form-control" id="password" name="password" style="margin:auto; width: 200px;">
-                <em class="form-text text-muted">Type your account password here</em> 
-            </div>
-            <div style="margin-top: 20px;text-align: center;">
-                <button type="submit" class="btn btn-light" style="margin-inline: 0 auto;">Submit</button>
-            </div>
-        </form>
+                <div style="margin-top: 20px"></div>
+
+                <input class="btn btn-light" type="submit" style="text-align: center;" href="/doLogin">
+            </form>
 
     </body>
 </html>

@@ -25,17 +25,30 @@ def doLogin():
     global isSignedIn
     isSignedIn = True
 
-    if path.exists("/loginData.csv"):
+    #check if user wants new account
+    if path.exists("loginData.csv"):
         #request username from the csv and add it to the handle
         #load in all the user data
         return render_template("homeLoggedIn.html")
     else:
-        d = {'AmorusHandle': [request.form['handle']], 'Password': [request.form['password']]}
+        d = {'AmorusID': [request.form['id']]}
         df = pd.DataFrame(data=d)
-        df.to_csv('loginData.csv')
-        return render_template("userDataInput.html", handle=request.form['handle'])  
+        #df.to_csv('loginData.csv')
+        return render_template("userDataInput.html", handle=d['AmorusID'])  
 
     #do bunch of sign in shit   
+
+def returnRandomProfile():
+    #get data from csv of random user and return in list (in order)
+    return
+
+@app.route("/uploadData", methods=['GET', 'POST'])
+def uploadData():
+    #addData to CSV file
+
+    #call returnRandomProfile, open display page and put in vals from list
+
+    return "hi"
 
 @app.route("/beginSearch", methods=['GET', 'POST'])
 def beginSearch():
