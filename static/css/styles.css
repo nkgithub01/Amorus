@@ -1,5 +1,5 @@
 div.carousel-inner {
-    height: 560px;
+    height: 100%;
     width: 100%;
     overflow: hidden;
 }
@@ -12,6 +12,12 @@ nav {
 
 body {
     background-color: white;
+}
+
+#specialFont{
+    padding-top: 30px;
+    text-align: center;
+    font-family: "Helvetica, sans-serif";
 }
 
 .col-md {
@@ -27,8 +33,17 @@ i {
 
 .topright {
     position: absolute;
-    font-size: 43px;   
+    font-size: 43px;
     top: 10%;
     left: 45%;
     justify-self: right;
+}
+
+div {
+    overflow: hidden;
+}
+
+  #underCarousel {
+      height: 100px;
+      background-color: #f7cad0;
   }
