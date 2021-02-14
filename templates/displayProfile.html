@@ -1,0 +1,90 @@
+<!DOCTYPE html> 
+<html lang="en">
+    <head>
+
+        <!-- required meta tags-->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <!--import Bootstrap CSS-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css", rel="stylesheet", integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl", crossorigin="anonymous">
+        
+        <!--import js bundle-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+        
+        <!--Import Awesome Icons-->
+        <link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
+
+        <!--Import CSS File-->
+        <link rel="stylesheet" href="static/css/styles.css">
+
+
+    </head>
+    <body>
+        
+        <nav id="homeNavBar" class="navbar navbar-expand-md navbar-dark fixed-top">
+            <a class="navbar-brand" href="/">
+                <h1 style="font-size: 50px;">Amorus</h1>  <!--Adding Brand Name to NavBar-->
+            </a> 
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!--Tabs in the NavBar-->
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="#">Find Companions</a>
+                        <a class="nav-item nav-link" href="#">Reservations</a>
+                        <a class="nav-item nav-link" href="#">Personalized Gifts</a>
+                        
+                        <a class="nav-item nav-link me-auto" href="/" id="accountName">Sign out of {{ handle }}</a>
+                        
+                    </div>
+                </div>
+            </div>
+
+        </nav>
+
+        <!--Spacer Under Carousel-->
+        <div style="margin-top: 90px;"></div>
+
+        <!--Display profile-->
+        <div style="text-align: center;">
+            <h2>{{ name }}</h2>
+            <p>{{ age }}</p>
+            <p>{{ status }}</p>
+            <p>{{ sex }}</p>
+            <p>{{ orientation }}</p>
+            <p>{{ bodyType }}</p>
+            <p>{{ diet }}</p>
+            <p>{{ drinks }}</p>
+            <p>{{ drugs }}</p>
+            <p>{{ education }}</p>
+            <p>{{ ethnicity }}</p>
+            <p>{{ height }}</p>
+            <p>{{ income }}</p>
+            <p>{{ job }}</p>
+            <p>{{ offspring }}</p>
+            <p>{{ pets }}</p>
+            <p>{{ religion }}</p>
+            <p>{{ smokes }}</p>
+            <p>{{ speaks }}</p>
+
+        </div>
+
+        <!--Submit button-->
+        <form action="/beginSearch" method="POST" role="form">
+            
+            <!--Spacer -->
+            <div style="padding-top: 40px;"></div>
+
+            <!--CHECK IF THESE ARE EMPTY!-->    
+            <div class="form-group" style="text-align: center;"> 
+                <input class="form-control" id="id" type="number" placeholder="Rating from 1-100" name="id" style="margin:auto; width: 200px;">
+                <input class="btn btn-light" type="submit" style="text-align: center;" href="/beginSearch">
+            </div>
+        </form>
+
+    </body>
+</html>

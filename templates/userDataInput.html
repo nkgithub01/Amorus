@@ -200,11 +200,62 @@
             <!--Spacer-->
             <div style="margin-top: 30px;"></div>
 
-            <!--Diet-->
+            <!--Drinks-->
+            <div class="form-group justify-content-center" style="text-align: center;">
+                <div class="form-group row justify-content-center" style="text-align: center;">
+                    <label class="col-sm-5 col-form-label" style="width: 500px;">What are your drinking habits?: </label>
+                    <div class="col-sm-4">
+                        <div class="drinks">
+                            <select name="bodyType" class="form-control" id="exampleFormControlSelect1">                              
+                              <option value="Not at All">Not at All</option>
+                              <option value="Rarely">Rarely</option>
+                              <option value="Socially">Socially</option>
+                              <option value="Often">Often</option>
+                              <option value="Desperately">Desperately</option>
+                            </select>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!--Spacer-->
+            <div style="margin-top: 30px;"></div>
+            
+            <!--Drugs-->
+            <div class="form-group justify-content-center" style="text-align: center;">
+                <div class="form-group row justify-content-center" style="text-align: center;">
+                    <label for="age" class="col-sm-5 col-form-label" style="width: 50px;">What are your drug habits?:</label>
+                    <div class="col-sm-4">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            
+                            <label class="btn btn-secondary active">
+                               <input type="radio" name="drugs" id="option1" autocomplete="off" value="Male"> Sometimes
+                            </label>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="drugs" id="option2" autocomplete="off" value="Female"> Never
+                            </label>
+                
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!--Spacer-->
+            <div style="margin-top: 30px;"></div>
+
+            <!--Education-->
+            <div class="form-group row justify-content-center" style="text-align: center;">
+                <label class="col-sm-5 col-form-label" style="width: 50px;">Education:</label>
+                <div class="col-sm-3">
+                    <input class="form-control" id="age" placeholder="Example: High School" name="education" style="width: 200px;">
+                </div>
+            </div>  
+
             
 
             <!--submit button-->
             <button type="submit" class="btn btn-danger">Submit</button>
+
 
         </form>
       </div>

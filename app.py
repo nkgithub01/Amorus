@@ -1,9 +1,14 @@
 from flask import Flask, render_template, request
 import pandas as pd
+import numpy as np
 from os import path
+import random
 
 app = Flask(__name__)
 isSignedIn = False
+
+profilesShown = 0
+training_results = []
 
 @app.route('/')
 def home():
@@ -11,6 +16,7 @@ def home():
 
 @app.route('/matchmaker')
 def matchmaker():
+    global isSignedIn
     if isSignedIn:
         return render_template('matchmake.html')
     else:
@@ -33,24 +39,58 @@ def doLogin():
     else:
         d = {'AmorusID': [request.form['id']]}
         df = pd.DataFrame(data=d)
-        #df.to_csv('loginData.csv')
+        df.to_csv('loginData.csv')
         return render_template("userDataInput.html", handle=d['AmorusID'])  
 
     #do bunch of sign in shit   
 
 def returnRandomProfile():
     #get data from csv of random user and return in list (in order)
-    return
+    randInt = random.randrange(1, 59947, 1)
+    dataSet = pd.read_csv("Backend/population.csv")
+    
+    features = []
+    
+    for i in dataSet[randInt]:
+        features.append(i)
+    #for element in row, append to list
+    return features
 
 @app.route("/uploadData", methods=['GET', 'POST'])
 def uploadData():
     #addData to CSV file
-
-    #call returnRandomProfile, open display page and put in vals from list
-
-    return "hi"
+    return render_template("homeLoggedIn.html")
 
 @app.route("/beginSearch", methods=['GET', 'POST'])
 def beginSearch():
-    #start search algorithm
-    return render_template("searchResults.html")
+    #global profilesShown
+    #if len(training_results) != 0:
+       # training_results.append(request.form['profileRating'])
+
+    #if profilesShown >= 20:
+     # return render_template("searchResults.html")
+    #else:
+        #profilesShown+=1
+       # features = returnRandomProfile()
+
+       # name = features[0]
+       # age = features[1]
+       # status= features[2]
+       # sex= features[3]
+       # orientation= features[4]
+       # bodyType= features[5]
+       # diet = features[6]
+       # drinks= features[7]
+      #  drugs= features[8]
+       # education= features[9]
+       # ethnicity= features[10]
+       # height= features[11]
+      #  income= features[12]
+       # job= features[13]
+      #  offspring= features[14]
+      #  pets= features[15]
+      #  religion= features[16]
+       # smokes= features[17]
+       # speaks= features[18]
+
+        return "ran out of time, check code for linear regression py file"
