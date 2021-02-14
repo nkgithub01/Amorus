@@ -1,0 +1,213 @@
+<!DOCTYPE html> 
+<html lang="en">
+    <head>
+        <!-- required meta tags-->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <!--import Bootstrap CSS-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css", rel="stylesheet", integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl", crossorigin="anonymous">
+        
+        <!--import js bundle-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+        
+         <!--Import CSS File-->
+         <link rel="stylesheet" href="../static/css/styles.css">
+
+         <!--Import Awesome Icons-->
+         <link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
+
+
+        <title>Amorus - MatchFinder</title>
+
+    </head>
+    <body>
+
+      <!--Creating Navigation Bar-->
+      <nav id="homeNavBar" class="navbar navbar-expand-md navbar-dark fixed-top">
+        <a class="navbar-brand" href="/">
+          <h1 style="font-size: 50px;">Amorus</h1>  <!--Adding Brand Name to NavBar-->
+        </a> 
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!--Tabs in the NavBar-->
+         <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+              <div class="navbar-nav">
+                <a class="nav-item nav-link" href="matchmaker">Find Companions</a>
+                <a class="nav-item nav-link" href="#">Reservations</a>
+                <a class="nav-item nav-link" href="#">Personalized Gifts</a>
+                <a class="nav-item nav-link me-auto" href="/" id="accountName">Sign out of {{ handle }}</a>
+              </div>
+            </div>
+          </div>
+
+      </nav>
+
+      <!--Spacer Division-->
+      <div style="margin-top: 140px;"></div>
+
+      <!--Asking for User Data-->
+      <div class="container-fluid" style="margin:0;">
+        <form action="/uploadData" method="POST" role="form">
+            <!--Name--> 
+            <div class="form-group row justify-content-center" style="text-align: center;">
+                <label for="name" class="col-sm-5 col-form-label" style="width: 50px;">Name:</label>
+                <div class="col-sm-3">
+                    <input class="form-control" id="name" name="name" style="width: 200px;">
+                </div>
+            </div> 
+
+            <div style="margin-top: 30px;"></div>
+
+            <!--Age-->
+            <div class="form-group row justify-content-center" style="text-align: center;">
+                <label for="age" class="col-sm-5 col-form-label" style="width: 50px;">Age:</label>
+                <div class="col-sm-3">
+                    <input class="form-control" type="number" min="1" max="100" id="age" name="age" style="width: 200px;">
+                </div>
+            </div>  
+
+            <!--Spacer-->
+            <div style="margin-top: 30px;"></div>
+
+            <!--Status-->
+            <div class="form-group justify-content-center" style="text-align: center;">
+                <div class="form-group row justify-content-center" style="text-align: center;">
+                    <label for="age" class="col-sm-5 col-form-label" style="width: 50px;">Status:</label>
+                    <div class="col-sm-4">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            
+                            <label class="btn btn-secondary active">
+                               <input type="radio" name="status" id="option1" autocomplete="off" value="Single"> Single
+                            </label>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="status" id="option2" autocomplete="off" value="Seeing Someone"> Seeing Someone
+                            </label>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="status" id="option3" autocomplete="off" value="Married"> Married
+                            </label>
+
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!--Spacer-->
+            <div style="margin-top: 30px;"></div>
+
+            <!--Sex-->
+            <div class="form-group justify-content-center" style="text-align: center;">
+                <div class="form-group row justify-content-center" style="text-align: center;">
+                    <label for="age" class="col-sm-5 col-form-label" style="width: 50px;">Sex:</label>
+                    <div class="col-sm-4">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            
+                            <label class="btn btn-secondary active">
+                               <input type="radio" name="sex" id="option1" autocomplete="off" value="Male"> Male
+                            </label>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="sex" id="option2" autocomplete="off" value="Female"> Female
+                            </label>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="sex" id="option3" autocomplete="off" value="Other"> Other
+                            </label>
+
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!--Spacer-->
+            <div style="margin-top: 30px;"></div>
+
+            <!--Orientation-->
+            <div class="form-group justify-content-center" style="text-align: center;">
+                <div class="form-group row justify-content-center" style="text-align: center;">
+                    <label for="age" class="col-sm-4 col-form-label" style="width: 50px; padding-right: 80px;">Orientation:</label>
+                    <div class="col-sm-4">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            
+                            <label class="btn btn-secondary active">
+                               <input type="radio" name="orientation" id="option1" autocomplete="off" value="Straight"> Straight
+                            </label>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="orientation" id="option2" autocomplete="off" value="Gay"> Gay
+                            </label>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="orientation" id="option3" autocomplete="off" value="Bisexual"> Bisexual
+                            </label>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="orientation" id="option3" autocomplete="off" value="Other"> Other
+                            </label>
+
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!--Spacer-->
+            <div style="margin-top: 30px;"></div>
+
+            <!--BodyType-->
+            <div class="form-group justify-content-center" style="text-align: center;">
+                <div class="form-group row justify-content-center" style="text-align: center;">
+                    <label class="col-sm-5 col-form-label" style="width: 120px;">Body Type:</label>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <select name="bodyType" class="form-control" id="exampleFormControlSelect1">                             
+                              <option>Skinny</option>
+                              <option value="Thin">Thin</option>
+                              <option value="Average">Average</option>
+                              <option value="Fit">Fit</option>
+                              <option value="Curvy">Curvy</option>
+                              <option value="A Little Extra">A Little Extra</option>
+                              <option value="Full Figured">Full Figured</option>
+                              <option value="Jacked">Jacked</option>
+                            </select>
+                          </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!--Spacer-->
+            <div style="margin-top: 30px;"></div>
+
+            <!--Diet-->
+            <div class="form-group justify-content-center" style="text-align: center;">
+                <div class="form-group row justify-content-center" style="text-align: center;">
+                    <label class="col-sm-5 col-form-label" style="width: 50px;">Diet: </label>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <select name="bodyType" class="form-control" id="exampleFormControlSelect1">                              
+                              <option value="Anything">Anything</option>
+                              <option value="Mostly Anything">Mostly Anything</option>
+                              <option value="Strictly Anything">Strictly Anything</option>
+                              <option value="Vegetarian">Vegetarian</option>
+                              <option value="Mostly Vegetarian">Mostly Vegetarian</option>
+                              <option value="Strictly Vegetarian">Strictly Vegetarian</option>
+                              <option value="Other">Other</option>
+                              <option value="Mostly Other">Mostly Other</option>
+                              <option value="Strictly Other">Strictly Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+
+            <!--Spacer-->
+            <div style="margin-top: 30px;"></div>
+
+            <!--Diet-->
+            
+
+            <!--submit button-->
+            <button type="submit" class="btn btn-danger">Submit</button>
+
+        </form>
+      </div>
+
+    </body>
+</html>

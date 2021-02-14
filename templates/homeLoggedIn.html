@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- required meta tags-->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <!--import Bootstrap CSS-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css", rel="stylesheet", integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl", crossorigin="anonymous">
+        
+        <!--import js bundle-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+        
+         <!--Import CSS File-->
+         <link rel="stylesheet" href="../static/css/styles.css">
+
+         <!--Import Awesome Icons-->
+         <link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
+
+
+        <title>Amorus - Home</title>
+
+    <head>
+    <body>
+
+      <!--Creating Navigation Bar-->
+      <nav id="homeNavBar" class="navbar navbar-expand-md navbar-dark fixed-top">
+        <a class="navbar-brand" href="/">
+          <h1 style="font-size: 50px;">Amorus</h1>  <!--Adding Brand Name to NavBar-->
+        </a> 
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!--Tabs in the NavBar-->
+         <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+              <div class="navbar-nav">
+                <a class="nav-item nav-link" href="matchmaker">Find Companions</a>
+                <a class="nav-item nav-link" href="#">Reservations</a>
+                <a class="nav-item nav-link" href="#">Personalized Gifts</a>
+                <a class="nav-item nav-link me-auto" href="/" id="accountName">Sign out of {{ id }}</a>
+              </div>
+            </div>
+          </div>
+
+      </nav>
+
+      <!--Spacer Division-->
+      <div style="margin-top: 90px;"></div>
+
+      <!--Container divided in 2-->
+      <!--Carousel of Images (RESIZE IMAGES TO BE SAME DIMENSIONS FOR SMOOTH AESTHETIC)-->
+      <div id="carouselSlide" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img class="d-block" src="static/images/love.jpg" alt="dog-profile" style="max-width: 100%; max-height: 100%;">
+            <div class="topright">Meet People Today Using Amorus</div>
+          
+          </div>
+          <div class="carousel-item">
+            <img class="d-block" src="static/images/cheatin is a crime.jpg" alt="lady-profile" style="max-width: 100%; max-height: 100%;">
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselSlide" role="button" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#carouselSlide" role="button" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </a>
+      </div>
+      
+      <div id="underCarousel" class="container-fluid" style="position: relative;">
+        <h1 id="specialFont">Truly Connect With People Like Never Before</h1>
+      </div>
+
+      <!--Spacer Division-->
+      <div style="margin-top: 100px;"></div>
+
+        <!--Reasons to Use Amorus-->
+        <div class="container-fluid ">
+          <div class="row">
+
+            <div class="col-md">
+              <i class="fab fa-gripfire" id="frontPageIcons" ></i>
+              <div style="margin-top: 40px;"></div>      
+                <h2>Over 60k Active Users</h2>
+            </div>
+
+            <div class="col-md">
+              <i class="fas fa-tasks" id="frontPageIcons"></i>
+              <div style="margin-top: 40px;"></div>      
+              <h2>Quick & Easy to Use</h2>
+            </div>
+
+            <div class="col-md">
+              <i class="fas fa-chart-pie" id="frontPageIcons"></i>   
+              <div style="margin-top: 40px;"></div>      
+              <h3>State of the Art Match Finding Algorithm</h3>
+            </div> 
+                
+          </div>
+        </div>
+
+            
+        <div style="margin-top: 400px;"></div>      
+
+        <!--Fill with contact us/more info about how it works-->
+        
+    </body>
+</html>
