@@ -1,9 +1,5 @@
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-from tensorflow.python.util import deprecation
-deprecation._PRINT_DEPRECATION_WARNINGS = False
 import pandas as pd
-import tensorflow as tf
+#import tensorflow as tf
 from sklearn.linear_model import LinearRegression
 import json
 from joblib import dump, load
@@ -12,18 +8,18 @@ import random
 
 # the id of a user is just their index / row-1 in the dataframe population
 # first 2 elements are name and neighbors, rest are the trainable features
-population = pd.read_csv("population.csv", na_values=['nan'])
+population = pd.read_csv("populations.csv", na_values=['nan'])
+'''
 #need to convert string of a dict to an actual dict
 new_neighbors_col = []
 for i in range(population.shape[0]):
     new_neighbors_col.append(json.loads(population.loc[i, 'neighbors']))
 population['neighbors'] = new_neighbors_col
-#print(isinstance(population.loc[0, 'neighbors'], dict))
+print(isinstance(population.loc[0, 'neighbors'], dict))
+'''
 
 # this is to ensure we keep the indexing right
 added_preexisting_data = False
-
-curr_id = 0
 
 names_to_id = dict()
 for id in range(population.shape[0]):
@@ -39,51 +35,42 @@ id_to_user = [None]*population.shape[0]
 # adjacency list for the matchfinding function
 adj = [population.loc[i, 'neighbors'] for i in range(population.shape[0])]
 
+# load linear classifiers that have been saved
+print("loading linear classifiers")
+linear_classifiers = [load(population.loc[id, 'linear classifier']) for id in range(population.shape[0])]
+#linear_classifiers = [0]*population.shape[0]
+print("finished loading linear classifiers")
+
 # features that a person will have
 features = list(population.columns)
 
 # category/ vocabulary list for features that have categorical data
 # the order matters for some features (categories listed in ascending order of drinking level for example)
-categories = { 'sex' : ['m', 'f'],
-     'status' : ['single', 'seeing someone'],
-    'orientation' : ['straight', 'gay'],
-     'body_type' : ['skinny', 'thin', 'average', 'fit', 'athletic', 'curvy', 'a little extra', 'full figured', 'jacked'],
-    'diet' : ['strictly other', 'mostly other', 'other', 'strictly vegetarian', 'mostly vegetarian', 'vegetarian',
+categories = { 'sex' : ['other', 'm', 'f'],
+     'status' : ['other', 'single', 'seeing someone'],
+    'orientation' : ['other', 'straight', 'gay'],
+     'body_type' : ['other', 'skinny', 'thin', 'average', 'fit', 'athletic', 'curvy', 'a little extra', 'full figured', 'jacked'],
+    'diet' : ['other', 'strictly other', 'mostly other', 'other', 'strictly vegetarian', 'mostly vegetarian', 'vegetarian',
               'strictly anything', 'mostly anything', 'anything'],
-     'drinks' : ['not at all', 'rarely', 'socially', 'often', 'desperately'],
-    'drugs' : ['never', 'sometimes'],
-     'education' : ['high school', 'graduated from high school','working on college/university',
+     'drinks' : ['other', 'not at all', 'rarely', 'socially', 'often', 'desperately'],
+    'drugs' : ['other', 'never', 'sometimes'],
+     'education' : ['other', 'high school', 'graduated from high school','working on college/university',
                     'graduated from college/university', 'working on masters program', 'graduated from masters program',
                     'working on ph.d program', 'graduated from ph.d program', 'dropped out of space camp',
                     'working on space camp', 'graduated from space camp'],
-    'ethnicity' : ['white', 'native', 'middle', 'hispanic', 'black', 'asian', 'pacific', 'indian'],
-     'job' : ['transportation', 'hospitality', 'student', 'artistic', 'computer', 'science', 'banking', 'sales',
+    'ethnicity' : ['other', 'white', 'native', 'middle', 'hispanic', 'black', 'asian', 'pacific', 'indian'],
+     'job' : ['other', 'transportation', 'hospitality', 'student', 'artistic', 'computer', 'science', 'banking', 'sales',
                     'medicine', 'executive', 'clerical', 'construction', 'political', 'law', 'education', 'military'],
-    'offspring' : ["doesn't want", "might want", "doesn't have kids", "has", "wants"],
-     'pets' : ["likes dogs and cats", "likes dogs", "likes cats", "has dog", "has cat"],
-    'religion' : ['agnosticism and laughing about it', 'agnosticism but not too serious about it',
-                  'agnosticism and somewhat serious about it', 'agnosticism and very serious about it', 'agnosticism',
-                  'atheism and laughing about it', 'atheism but not too serious about it',
-                  'atheism and somewhat serious about it', 'atheism and very serious about it', 'atheism',
-                  'christianity and laughing about it', 'christianity but not too serious about it',
-                  'christianity and somewhat serious about it', 'christianity and very serious about it', 'christianity',
-                  'catholicism and laughing about it', 'catholicism but not too serious about it',
-                  'catholicism and somewhat serious about it', 'catholicism and very serious about it', 'catholicism',
-                  'buddhism and laughing about it', 'buddhism but not too serious about it',
-                  'buddhism and somewhat serious about it', 'buddhism and very serious about it', 'buddhism',
-                  'judaism and laughing about it', 'judaism but not too serious about it',
-                  'judaism and somewhat serious about it', 'judaism and very serious about it', 'judaism',
-                  'hinduism and laughing about it', 'hinduism but not too serious about it',
-                  'hinduism and somewhat serious about it', 'hinduism and very serious about it', 'hinduism'
-                  'other and laughing about it', 'other but not too serious about it',
-                  'other and somewhat serious about it', 'other and very serious about it', 'other'],
-     'smokes' : ["no","trying to quit", "sometimes", "when drinking", "yes"],
-    'speaks' : ["english", "spanish", "french", "german", "sign language", "italian", "japanese", "russian", "gujarati",
+    'offspring' : ['other', "doesn't want", "might want", "doesn't have kids", "has", "wants"],
+     'pets' : ['other', "likes dogs and cats", "likes dogs", "likes cats", "has dog", "has cat"],
+    'religion' : ['other'],
+     'smokes' : ['other', "no","trying to quit", "sometimes", "when drinking", "yes"],
+    'speaks' : ['other', "english", "spanish", "french", "german", "sign language", "italian", "japanese", "russian", "gujarati",
                 "hindi", "chinese", "sanskrit", "portuguese"]}
 
 categories = {key: dict(zip(categories[key], range(1,len(categories[key])+1))) for key in categories.keys()}
 categories_rev = {key: dict(enumerate(categories[key],start =1)) for key in categories.keys()}
-print(categories, categories_rev)
+
 # make sure the nan values are filled in or you will get errors with the .train function (expects some type)
 for feature in features:
     if feature in categories:
@@ -111,6 +98,11 @@ def make_features(user_features):
             new_features.append(float(user_features[i]))
 
     return new_features
+# add cracked bfs nitin C^(length of the path) * product of 1/(all compatibilities(both directions))
+def matchmake(user_id):
+    print("Best match:\n")
+    for i in range(population.shape[1]):
+        print(population.iloc[100, i])
 
 def make_features_all(user_features_all):
     new_features_all = []
@@ -122,7 +114,7 @@ def make_features_all(user_features_all):
 
 
 class User:
-    def __init__(self, user_features = None, linear_classifier = None, new_user = False):
+    def __init__(self, user_features = None, linear_classifier = None, user_id = population.shape[0]):
         # dict of features that have user_features as values
         self.features = dict(zip(features, [None]*len(features)))
         # user features list
@@ -130,8 +122,8 @@ class User:
         # linear regression model
         self.linear_classifier = None
 
-        '''
-        # setup person's features
+
+        # setup person's features -> order matters create feature_list then create features later
         if user_features is None:
             # user needs to input their personal features
 
@@ -154,6 +146,7 @@ class User:
                     print('\nEnter your ' + feature + ':')
                     inp = int(input())
                     self.features[feature] = inp
+
 
             self.features['neighbors'] = []
             print("\nNow let's connect you to your friends :)")
@@ -182,15 +175,15 @@ class User:
         else:
             # just create this object of type User using the previously stored user_features
             self.features_list = user_features
-            self.feature_list = {features[i]: user_features[i] for i in range(len(features))}
-        '''
+            self.features = {features[i]: user_features[i] for i in range(len(features))}
+
         # setup linear_classifier
         if linear_classifier is None:
             # make new linear classifier
             # user needs to input who they like to create this linear classifier
 
             # user input determines the user's love interest in some random users
-            training_examples = population.sample(min(population.shape[0], 20))
+            training_examples = population.sample(min(population.shape[0], 5))
             love_interests = [0]*training_examples.shape[0]
             print('''\nLet's find out who you like!
 For each person, enter a number from 0 to 100:
@@ -240,7 +233,7 @@ For each person, enter a number from 0 to 100:
                 print(i)
             print("Average predicted percentage that you are attracted to 20 random people:",
                   sum(preds2)/20)
-            return
+
         else:
             # just create the linear classifier using the previously stored linear classifier
             self.linear_classifier = linear_classifier
@@ -248,66 +241,114 @@ For each person, enter a number from 0 to 100:
 
         # edit some global variables to incorporate this User into the network of existing Users
         # Also save the new user to the csv file population
-        if new_user:
-            global curr_id
-            adj.append(self.features['neighbors'])
-            id_to_user[curr_id] = self
-            curr_id += 1
+        if user_id == population.shape[0]:
+            # add weights for neighbors
+            for neighbor in self.features['neighbors']:
+                prediction = linear_classifiers[id].predict([make_features(population.loc[neighbor])])[0]
+                # make sure it's between 0 and 1
+                prediction = max(0, prediction)
+                prediction = min(1, prediction)
+                self.features['neighbors'][neighbor] = [id, 'neighbors'][neighbor] = prediction
+
+            # update global vars
+            id_to_user.append(self)
             name = self.features['name']
             if name in names_to_id:
-                names_to_id[name].append(curr_id)
+                names_to_id[name].append(population.shape[0])
             else:
-                names_to_id[name] = [curr_id]
+                names_to_id[name] = [population.shape[0]]
+            linear_classifiers.append(self.features['linear classifier'])
+            adj.append(self.features['neighbors'])
 
+            # add to data frame and update csv
             population.loc[population.shape[0]] = self.features_list
-
-            print("\nYou've been Added!")
-        else:
-            # we were just loading a preexisting user so there's nothing to update
-            # curr_id, adj, id_to_user, and names_to_id have already been created from the preexisting users
-            pass
+            population.loc[population.shape[0] - 1].to_csv('populations.csv', mode='a', header=False)
+        elif user_id >= 0:
+            id_to_user[user_id] = self
+        # print("\nYou've been Added!")
 
 
 # takes in a dataframe of users without neighbors or linear regression models and a number of distinct linear classifiers
 # randomly assigns neighbors and a linear classifier to each user and updates the csv file populations
 # then it creates all the classes of the users
 # population = dataset to train, num_distinct = number of distinct lin classifiers, num_examples = num training examples
-def add_random_neighbors_and_lin_class_users(population, max_friends=25, num_distinct=500, num_examples=20):
-    #give each neighbor
+######## if you have time make sure that after running this it's the same as running add_preexisting_users + setting up global vars
+def add_random_neighbors_and_lin_class_users(population, max_friends=25, num_distinct=60000, num_examples=20):
+    # give each user 0 - max friends friends/neighbors
     for id in range(population.shape[0]):
+        if id % 1000 == 0:
+            print(id)
+
         num_neighbors = random.randint(1, max_friends)
         population.loc[id, 'neighbors'].clear()
         for j in range(num_neighbors):
             neighbor = random.randint(0, population.shape[0]-1)
             population.loc[id, 'neighbors'][neighbor] = 0
 
-    linear_classifiers = []
+    linear_classifiers2 = []
     ids = list(range(population.shape[0]))  # randomly ordered ids
     random.shuffle(ids)
+    shuffles = 1
     for i in range(num_distinct):
-        # for getting a random sample of x users
-        training_examples = [population.iloc[ids[(i*num_examples+j) % len(ids)], 2:-1] for j in range(num_examples)]
-        print(training_examples[0])
-        love_interests = [random.randint(0, 100)/100 for j in range(num_examples)]
-        linear_classifiers.append(create_lin_classifier(pd.DataFrame(training_examples), love_interests))
-        print(predict(linear_classifiers[-1], population.iloc[10]))
-        linear_classifiers[i].export_saved_model(f'Linear Classifiers/{i}', serving_input_receiver_fn=(
-            tf.estimator.export.build_parsing_serving_input_receiver_fn(
-                tf.feature_column.make_parse_example_spec(feature_columns))))
+        if i % 1000 == 0:
+            print(i)
 
+        # reshuffle data so that it's randomized
+        if shuffles*len(ids) < i*num_examples:
+            random.shuffle(ids)
+            shuffles += 1
+
+        # for getting a random sample of x users
+        training_examples = make_features_all([list(population.iloc[ids[(i*num_examples+j) % len(ids)]]) for j in range(num_examples)])
+        love_interests = [random.randint(0, 100)/100 for j in range(num_examples)]
+        # create linear classifier
+        linear_classifiers2.append(LinearRegression().fit(training_examples, love_interests))
+        # download linear classifier to directory
+        dump(linear_classifiers2[i], f'Linear Classifiers/{i}.joblib')
+        # test to make sure you can reload it
+        a = load(f'Linear Classifiers/{i}.joblib')
+        '''
+        for i in a.predict(training_examples):
+            print(i)
+        '''
+
+    # assign each user a random classifier
     id_to_classifier = [random.randint(0, num_distinct-1) for i in range(population.shape[0])]
     for id in range(population.shape[0]):
-        population.loc[id, 'linear classifier'] = f'Linear Classifiers/{id_to_classifier[id]}'
-        a = tf.estimator.LinearClassifier(feature_columns=feature_columns, warm_start_from=population.loc[id, 'linear classifier'])
-        print(predict(a, population.iloc[10]))
+        if id % 1000 == 0:
+            print(id)
 
+        # add the linear classifiers to the dataframe and make them accessible via linear_classifiers array
+        linear_classifiers[id] = linear_classifiers2[id_to_classifier[id]]
+        population.loc[id, 'linear classifier'] = f'Linear Classifiers/{id_to_classifier[id]}.joblib'
+
+        # find the percent that the current user is attracted to their neighbors and save it (like an edge weight)
+        for neighbor in population.loc[id, 'neighbors']:
+            prediction = linear_classifiers[id].predict([make_features(population.loc[neighbor])])[0]
+            # make sure it's between 0 and 1
+            prediction = max(0, prediction)
+            prediction = min(1, prediction)
+            population.loc[id, 'neighbors'][neighbor] = prediction
+
+            # print(population.loc[id, 'neighbors'][neighbor])
+
+        # print(list(population.loc[id]))
+        User(list(population.loc[id]), linear_classifiers[id], id)
+
+    # rewrite to the csv file
+    population.to_csv("population.csv")
 
 
 def add_preexisting_users():
+    for id in range(population.shape[0]):
+        if id % 1000 == 0:
+            print(id)
+
+        User(list(population.loc[id]), linear_classifiers[id], id)
 
     global added_preexisting_data
     added_preexisting_data = True
-    pass
+
 
 # ONLY ADD NEW USERS AFTER LOADING PREEXISTING DATA (will mess up indexing/ids if you don't)
 def add_new_user():
@@ -319,15 +360,11 @@ def add_new_user():
 
 
 
-# add cracked bfs nitin C^(length of the path) * product of 1/(all compatibilities(both directions))
-def matchmake(user_id):
-    pass
-
 
 def main():
-    User()
-    add_random_neighbors_and_lin_class_users(population, 1, 1, 5)
-    #add_preexisting_users()
-    #add_new_user()
+    #add_random_neighbors_and_lin_class_users(population)
+    add_preexisting_users()
+    add_new_user()
+    matchmake(10)
 
 main()
