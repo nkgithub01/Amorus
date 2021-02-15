@@ -7,7 +7,7 @@ import random
 app = Flask(__name__)
 
 isSignedIn = False
-userFeatures = []
+userFeatures = [None]*20
 
 profilesShown = 0
 training_labels = []
@@ -34,7 +34,7 @@ def signIn():
 @app.route("/newAccount")
 def newAccount():
     global dataSet
-    return render_template("userDataInput.html", id=dataSet.shape[0]+1) 
+    return render_template("userDataInput.html", id=dataSet.shape[0]+2) 
 
 
 @app.route("/doLogin", methods=['GET', 'POST'])
@@ -61,8 +61,31 @@ def returnRandomProfile():
 
 @app.route("/uploadData", methods=['GET', 'POST'])
 def uploadData():
-    #addData to Python class
-    return render_template("homeLoggedIn.html")
+    global userFeatures
+
+    #oh god
+    userFeatures[0] = request.form['name']
+    userFeatures[1] = request.form['friends']
+    userFeatures[2] = request.form['age']
+    userFeatures[3] = request.form['status']
+    userFeatures[4] = request.form['sex']
+    userFeatures[5] = request.form['orientation']
+    userFeatures[6] = request.form['bodyType']
+    userFeatures[7] = request.form['diet']
+    userFeatures[8] = request.form['drinks']
+    userFeatures[9] = request.form['drugs']
+    userFeatures[10] = request.form['education']
+    userFeatures[11] = request.form['ethnicity']
+    userFeatures[12] = request.form['height']
+    userFeatures[13] = request.form['income']
+    userFeatures[14] = request.form['job']
+    userFeatures[15] = request.form['offspring']
+    userFeatures[16] = request.form['pets']
+    userFeatures[17] = request.form['religion']
+    userFeatures[18] = request.form['smokes']
+    userFeatures[19] = request.form['speaks']
+
+    return render_template("homeLoggedIn.html", handle=userFeatures[0], pog = userFeatures)
 
 @app.route("/beginSearch")
 def beginSearch():
