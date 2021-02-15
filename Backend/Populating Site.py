@@ -33,7 +33,7 @@ print(all.shape)
 
 #create the population output file
 #first 2 elements are name and neighbors, rest are the trainable features
-all.to_csv("population.csv", index = 0)
+all.to_csv("population.csv", index = False)
 
 
 
