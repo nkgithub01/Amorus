@@ -181,7 +181,7 @@
                     <label class="col-sm-5 col-form-label" style="width: 50px;">Diet: </label>
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <select name="bodyType" class="form-control" id="exampleFormControlSelect1">                              
+                            <select name="diet" class="form-control" id="exampleFormControlSelect1">                              
                               <option value="Anything">Anything</option>
                               <option value="Mostly Anything">Mostly Anything</option>
                               <option value="Strictly Anything">Strictly Anything</option>
@@ -206,7 +206,7 @@
                     <label class="col-sm-5 col-form-label" style="width: 500px;">What are your drinking habits?: </label>
                     <div class="col-sm-4">
                         <div class="drinks">
-                            <select name="bodyType" class="form-control" id="exampleFormControlSelect1">                              
+                            <select name="drinks" class="form-control" id="exampleFormControlSelect1">                              
                               <option value="Not at All">Not at All</option>
                               <option value="Rarely">Rarely</option>
                               <option value="Socially">Socially</option>
@@ -224,7 +224,7 @@
             <!--Drugs-->
             <div class="form-group justify-content-center" style="text-align: center;">
                 <div class="form-group row justify-content-center" style="text-align: center;">
-                    <label for="age" class="col-sm-5 col-form-label" style="width: 50px;">What are your drug habits?:</label>
+                    <label for="age" class="col-sm-5 col-form-label" style="width: 250px;">What are your drug habits?:</label>
                     <div class="col-sm-4">
                         <div class="btn-group" role="group" aria-label="Basic example">
                             
@@ -244,13 +244,82 @@
             <div style="margin-top: 30px;"></div>
 
             <!--Education-->
-            <div class="form-group row justify-content-center" style="text-align: center;">
-                <label class="col-sm-5 col-form-label" style="width: 50px;">Education:</label>
-                <div class="col-sm-3">
-                    <input class="form-control" id="age" placeholder="Example: High School" name="education" style="width: 200px;">
-                </div>
+            <div class="form-group justify-content-center" style="text-align: center;">
+                <div class="form-group row justify-content-center" style="text-align: center;">
+                    <label class="col-sm-5 col-form-label" style="width: 130px;">Educaton: </label>
+                    <div class="col-sm-4">
+                        <div class="drinks">
+                            <select name="education" class="form-control" id="exampleFormControlSelect1">  
+                                
+                              <option value="high school">High School</option>
+                              <option value="graduated from high school">Graduated from High School</option>
+                              <option value="working on college/university">Working on College/University</option>
+                              <option value="graduated from college/university">Graduated from College/University</option>
+                              <option value="working on masters program">Working on Master's Program</option>
+                              <option value="graduated from masters program">Graduated from Master's Program</option>
+                              <option value="working on ph.d program">Working on Ph.D Program</option>
+                              <option value="graduated from ph.d program">Graduated from Ph.D Program</option>
+                              <option value="dropped out of space camp">Dropped Out of Space Camp</option>
+                              <option value="working on space camp">Working on Space Camp</option>
+                              <option value="graduated from space camp">Graduated from Space Camp</option>
+                              <option value="other">Other</option>
+
+                            </select>
+                        </div>
+                    </div>
+                </div> 
             </div>  
 
+            <!--Spacer-->
+            <div style="margin-top: 30px;"></div>
+
+            <!--Ethnicity-->
+
+            <div class="form-group justify-content-center" style="text-align: center;">
+                <div class="form-group row justify-content-center" style="text-align: left;">
+                    <label class="col-sm-5 col-form-label" style="width: 130px;">Ethnicity: </label>
+                    <div class="col-sm-4">
+                        <div class="btn-group-toggle" data-toggle="buttons">
+
+                            <label class="btn btn-secondary active">
+                            <input type="checkbox" name="white" value="true" unchecked autocomplete="off"> White
+                            </label>
+
+                            <label class="btn btn-secondary active">
+                                <input type="checkbox" name="native american" value="true" unchecked autocomplete="off"> Native American
+                            </label>
+                        
+                            <label class="btn btn-secondary active">
+                                <input type="checkbox" name="middle eastern" value="true" unchecked autocomplete="off"> Middle Eastern
+                            </label>
+                            
+                            <label class="btn btn-secondary active">
+                                <input type="checkbox" name="hispanic" value="true" unchecked autocomplete="off"> Hispanic
+                            </label>
+
+                            <label class="btn btn-secondary active">
+                                <input type="checkbox" name="black" value="true" unchecked autocomplete="off"> Black
+                            </label>
+
+                            <label class="btn btn-secondary active">
+                                <input type="checkbox" name="asian" value="true" unchecked autocomplete="off"> Asian
+                            </label>
+
+                            <label class="btn btn-secondary active">
+                                <input type="checkbox" name="pacific islander" value="true" unchecked autocomplete="off"> Pacific Islander
+                            </label>
+
+                            <label class="btn btn-secondary active">
+                                <input type="checkbox" name="indian" value="true" unchecked autocomplete="off"> Indian
+                            </label>
+
+                            <label class="btn btn-secondary active">
+                                <input type="checkbox" name="other" value="true" unchecked autocomplete="off"> Other
+                            </label>
+                        </div>
+                    </div>
+                </div> 
+            </div>  
             
 
             <!--submit button-->

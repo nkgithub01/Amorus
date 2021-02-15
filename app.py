@@ -33,10 +33,8 @@ def signIn():
 
 @app.route("/newAccount")
 def newAccount():
-    global userFeatures
-    userFeatures.append(request.form['id'])
-
-    return render_template("userDataInput.html", id=userFeatures[0]) 
+    global dataSet
+    return render_template("userDataInput.html", id=dataSet.shape[0]+1) 
 
 
 @app.route("/doLogin", methods=['GET', 'POST'])
@@ -51,10 +49,9 @@ def doLogin():
 
 
 def returnRandomProfile():
-    #get data from csv of random user and return in list (in order)
+    global dataSet
+
     randInt = random.randrange(1, 59947, 1)
-    
-    
     features = []
     
     for i in dataSet.iloc[randInt]:
