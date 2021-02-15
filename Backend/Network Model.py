@@ -5,21 +5,35 @@ import json
 from joblib import dump, load
 import random
 
+
+
+# input and setting up global variables
+###################################################################################################################
+
+# converts string of a dict of int : float to an actual python dict
 def string_to_dict(d):
+    d = d[1:-1]
+    d = d.split(",")
+    d = [''.join(pair.split()).split(":") for pair in d]
+
+    # no elements in the dict will throw error for last conversion
+    if len(d[0]) == 1:
+        return {}
+
+    d = [[int(key), float(value)] for key, value in d]
+    new_d = dict(d)
+
+    return new_d
 
 # the id of a user is just their index / row-1 in the dataframe population
 # first 2 elements are name and neighbors, rest are the trainable features
-population = pd.read_csv("populations.csv", na_values=['nan'])
+saved_database_of_users_in_csv = "populations.csv"
+population = pd.read_csv(saved_database_of_users_in_csv, na_values=['nan'])
 
-#need to convert string of a dict to an actual dict
 new_neighbors_col = []
 for i in range(population.shape[0]):
-    dct = population.loc[i, 'neighbors'].replace("\'", '\"')
-    print(dct)
-    new_neighbors_col.append(json.loads(dct))
+    new_neighbors_col.append(string_to_dict(population.loc[i, 'neighbors']))
 population['neighbors'] = new_neighbors_col
-print(isinstance(population.loc[0, 'neighbors'], dict))
-
 
 # this is to ensure we keep the indexing right
 added_preexisting_data = False
@@ -81,6 +95,20 @@ for feature in features:
     else:
         population[feature].fillna(0, inplace=True)
 
+def check_loaded_correctly():
+    print(isinstance(population.loc[0, 'neighbors'], dict))
+    for i in range(10):
+        print(list(population.iloc[i]))
+    print(id_to_user[:10])
+    print(adj[:10])
+    print(str(names_to_id)[:100])
+    print(linear_classifiers[0].predict([make_features(list(population.iloc[0]))])[0],
+    linear_classifiers[0].predict([make_features(list(population.iloc[population.shape[0]-1]))])[0])
+
+###################################################################################################################
+
+
+
 
 # linear regression section
 ###################################################################################################################
@@ -133,6 +161,9 @@ def make_edge(u,v):
 ###################################################################################################################
 
 
+
+# adding Users/ loading preexisting ones from the database and matchmake function
+###################################################################################################################
 class User:
     def __init__(self, user_features = None, linear_classifier = None, user_id = population.shape[0]):
         # dict of features that have user_features as values
@@ -234,14 +265,14 @@ For each person, enter a number from 0 to 100:
             self.linear_classifier = LinearRegression()
             self.linear_classifier.fit(training_examples, love_interests)
 
-
+            '''
             # testing:
             preds = self.linear_classifier.predict(training_examples)
             random_sample = population.sample(20)
             random_sample = make_features_all([list(random_sample.iloc[i]) for i in range(20)])
             preds2 = self.linear_classifier.predict(random_sample)
 
-
+        
             print("Predictions for the 20 people you entered")
             for i in preds:
                 print(i)
@@ -253,7 +284,7 @@ For each person, enter a number from 0 to 100:
                 print(i)
             print("Average predicted percentage that you are attracted to 20 random people:",
                   sum(preds2)/20)
-
+            '''
         else:
             # just create the linear classifier using the previously stored linear classifier
             self.linear_classifier = linear_classifier
@@ -262,14 +293,6 @@ For each person, enter a number from 0 to 100:
         # edit some global variables to incorporate this User into the network of existing Users
         # Also save the new user to the csv file population
         if user_id == population.shape[0]:
-            # add weights for neighbors
-            for neighbor in self.features['neighbors']:
-                prediction = linear_classifiers[id].predict([make_features(population.loc[neighbor])])[0]
-                # make sure it's between 0 and 1
-                prediction = max(0, prediction)
-                prediction = min(1, prediction)
-                self.features['neighbors'][neighbor] = [id, 'neighbors'][neighbor] = prediction
-
             # update global vars
             id_to_user.append(self)
             name = self.features['name']
@@ -278,11 +301,19 @@ For each person, enter a number from 0 to 100:
             else:
                 names_to_id[name] = [population.shape[0]]
             linear_classifiers.append(self.features['linear classifier'])
-            adj.append(self.features['neighbors'])
 
             # add to data frame and update csv
             population.loc[population.shape[0]] = self.features_list
+
+            # add weights for neighbors
+            for neighbor in self.features['neighbors']:
+                make_edge(population.shape[0]-1, neighbor)
+            adj.append(self.features['neighbors'])
+
+            # add to data frame and update csv
+            self.features_list = population.loc[population.shape[0]-1]
             pd.DataFrame(population.loc[population.shape[0] - 1]).T.to_csv('populations.csv', mode='a', header=False)
+
         elif user_id >= 0:
             id_to_user[user_id] = self
         # print("\nYou've been Added!")
@@ -294,6 +325,9 @@ For each person, enter a number from 0 to 100:
 # population = dataset to train, num_distinct = number of distinct lin classifiers, num_examples = num training examples
 ######## if you have time make sure that after running this it's the same as running add_preexisting_users + setting up global vars
 def add_random_neighbors_and_lin_class_users(population, max_friends=25, num_distinct=60000, num_examples=20):
+    # every training example will get a unique linear classifier anyway if num_distinct > # training examples
+    num_distinct = min(num_distinct, population.shape[0])
+
     # give each user 0 - max friends friends/neighbors
     for id in range(population.shape[0]):
         if id % 1000 == 0:
@@ -303,8 +337,9 @@ def add_random_neighbors_and_lin_class_users(population, max_friends=25, num_dis
         population.loc[id, 'neighbors'].clear()
         for j in range(num_neighbors):
             neighbor = random.randint(0, population.shape[0]-1)
-            population.loc[id, 'neighbors'][neighbor] = 0
+            population.loc[id, 'neighbors'][neighbor] = None
 
+    # create num_distinct linear classifiers
     linear_classifiers2 = []
     ids = list(range(population.shape[0]))  # randomly ordered ids
     random.shuffle(ids)
@@ -325,14 +360,14 @@ def add_random_neighbors_and_lin_class_users(population, max_friends=25, num_dis
         linear_classifiers2.append(LinearRegression().fit(training_examples, love_interests))
         # download linear classifier to directory
         dump(linear_classifiers2[i], f'Linear Classifiers/{i}.joblib')
-        # test to make sure you can reload it
+        # test to make sure you can reload it and it predicts properly
         a = load(f'Linear Classifiers/{i}.joblib')
-        '''
-        for i in a.predict(training_examples):
-            print(i)
-        '''
+        print("Percents:\n")
+        for percent in a.predict(training_examples):
+            print(percent)
 
-    # assign each user a random classifier
+    # assign each user a random classifier the output is the idx of the classifier in linear_classifiers2
+    # this classifier has been saved at 'Linear Classifiers/idx.joblib'
     id_to_classifier = [random.randint(0, num_distinct-1) for i in range(population.shape[0])]
     for id in range(population.shape[0]):
         if id % 1000 == 0:
@@ -342,9 +377,10 @@ def add_random_neighbors_and_lin_class_users(population, max_friends=25, num_dis
         linear_classifiers[id] = linear_classifiers2[id_to_classifier[id]]
         population.loc[id, 'linear classifier'] = f'Linear Classifiers/{id_to_classifier[id]}.joblib'
 
-        # find the percent that the current user is attracted to their neighbors and save it (like an edge weight)
+        # find the percent that the current user is attracted to their neighbors and vice versa
+        # + save that percent (like an edge weight)
         for neighbor in population.loc[id, 'neighbors']:
-
+            make_edge(id, neighbor)
 
         # print(list(population.loc[id]))
         User(list(population.loc[id]), linear_classifiers[id], id)
@@ -378,10 +414,14 @@ def matchmake(user_id):
     for i in range(population.shape[1]):
         print(population.iloc[100, i])
 
+##############################################################################################################
+
+
 
 def main():
-    add_random_neighbors_and_lin_class_users(population)
-    #add_preexisting_users()
+    #add_random_neighbors_and_lin_class_users(population)
+    add_preexisting_users()
+    check_loaded_correctly()
     #add_new_user()
     #matchmake(10)
 
