@@ -1,3 +1,6 @@
+# converts ok cupid profiles into a csv file with the features we want to include, empty neighbors and linear regression file
+
+
 import pandas as pd
 all = pd.read_csv("okcupid_profiles.csv") # the entire dataset
 

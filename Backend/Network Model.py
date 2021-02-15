@@ -5,18 +5,21 @@ import json
 from joblib import dump, load
 import random
 
+def string_to_dict(d):
 
 # the id of a user is just their index / row-1 in the dataframe population
 # first 2 elements are name and neighbors, rest are the trainable features
 population = pd.read_csv("populations.csv", na_values=['nan'])
-'''
+
 #need to convert string of a dict to an actual dict
 new_neighbors_col = []
 for i in range(population.shape[0]):
-    new_neighbors_col.append(json.loads(population.loc[i, 'neighbors']))
+    dct = population.loc[i, 'neighbors'].replace("\'", '\"')
+    print(dct)
+    new_neighbors_col.append(json.loads(dct))
 population['neighbors'] = new_neighbors_col
 print(isinstance(population.loc[0, 'neighbors'], dict))
-'''
+
 
 # this is to ensure we keep the indexing right
 added_preexisting_data = False
@@ -81,7 +84,9 @@ for feature in features:
 
 # linear regression section
 ###################################################################################################################
-#alters user_features so that categorical features are numerical
+
+# alters user_features so that categorical features are numerical
+# converts a single user's list of user features
 def make_features(user_features):
     new_features = []
     for i in range(2, len(features)-1):
@@ -98,18 +103,33 @@ def make_features(user_features):
             new_features.append(float(user_features[i]))
 
     return new_features
-# add cracked bfs nitin C^(length of the path) * product of 1/(all compatibilities(both directions))
-def matchmake(user_id):
-    print("Best match:\n")
-    for i in range(population.shape[1]):
-        print(population.iloc[100, i])
 
+# converts a list where each element is a list of user features
 def make_features_all(user_features_all):
     new_features_all = []
     for user_features in user_features_all:
         new_features_all.append(make_features(user_features))
 
     return new_features_all
+
+# adds an edge from u to v via adding a key value pair in u's neighbor dictionary
+# with key = v and value = predicted compatibility and vice versa for v
+def make_edge(u,v):
+    prediction = linear_classifiers[u].predict([make_features(population.loc[v])])[0]
+    # make sure it's between 0 and 1
+    prediction = max(0, prediction)
+    prediction = min(1, prediction)
+    population.loc[u, 'neighbors'][v] = prediction
+
+    # print(population.loc[id, 'neighbors'][neighbor])
+    prediction = linear_classifiers[v].predict([make_features(population.loc[u])])[0]
+    # make sure it's between 0 and 1
+    prediction = max(0, prediction)
+    prediction = min(1, prediction)
+    population.loc[v, 'neighbors'][u] = prediction
+
+    # print(population.loc[id, 'neighbors'][neighbor])
+
 ###################################################################################################################
 
 
@@ -262,7 +282,7 @@ For each person, enter a number from 0 to 100:
 
             # add to data frame and update csv
             population.loc[population.shape[0]] = self.features_list
-            population.loc[population.shape[0] - 1].to_csv('populations.csv', mode='a', header=False)
+            pd.DataFrame(population.loc[population.shape[0] - 1]).T.to_csv('populations.csv', mode='a', header=False)
         elif user_id >= 0:
             id_to_user[user_id] = self
         # print("\nYou've been Added!")
@@ -324,19 +344,13 @@ def add_random_neighbors_and_lin_class_users(population, max_friends=25, num_dis
 
         # find the percent that the current user is attracted to their neighbors and save it (like an edge weight)
         for neighbor in population.loc[id, 'neighbors']:
-            prediction = linear_classifiers[id].predict([make_features(population.loc[neighbor])])[0]
-            # make sure it's between 0 and 1
-            prediction = max(0, prediction)
-            prediction = min(1, prediction)
-            population.loc[id, 'neighbors'][neighbor] = prediction
 
-            # print(population.loc[id, 'neighbors'][neighbor])
 
         # print(list(population.loc[id]))
         User(list(population.loc[id]), linear_classifiers[id], id)
 
     # rewrite to the csv file
-    population.to_csv("population.csv", index=False)
+    population.to_csv("populations2.csv", index=False)
 
 
 def add_preexisting_users():
@@ -358,13 +372,17 @@ def add_new_user():
         User()
 
 
-
+# add cracked bfs nitin C^(length of the path) * product of 1/(all compatibilities(both directions))
+def matchmake(user_id):
+    print("Best match:\n")
+    for i in range(population.shape[1]):
+        print(population.iloc[100, i])
 
 
 def main():
-    #add_random_neighbors_and_lin_class_users(population)
-    add_preexisting_users()
-    add_new_user()
-    matchmake(10)
+    add_random_neighbors_and_lin_class_users(population)
+    #add_preexisting_users()
+    #add_new_user()
+    #matchmake(10)
 
 main()

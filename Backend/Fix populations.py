@@ -1,5 +1,5 @@
 import pandas as pd
 
 a = pd.read_csv("population.csv")
-b = a.iloc[:1000,1:]
-b.to_csv("populations.csv", index=False)
+b = a.iloc[:59946,1:]
+b.to_csv("population.csv", index=False)
