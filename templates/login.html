@@ -53,22 +53,41 @@
 
         
 
-        <!--Take Login Credeentials-->
-        <form action="/doLogin" method="POST" role="form">
+         <!--Spacer -->
+        <div style="padding-top: 40px;"></div>
+
+        <!--Container divided in 2-->
+        <div class="container-fluid">
+            <div class="row">
             
-            <!--Spacer -->
-            <div style="padding-top: 40px;"></div>
+            
+                <div class="col-lg" style=" background-color:  #ff99ac;">
+                    <!--Take Login Credeentials-->
+                    <form action="/doLogin" method="POST" role="form">
+                        
+                       
 
-            <!--CHECK IF THESE ARE EMPTY!-->    
-            <div class="form-group" style="text-align: center;"> 
-                <label class="whiteText" style="padding-top: 30 px">Amorus ID:</label>
-                <input class="form-control" id="id" placeholder="Amorus ID" name="id" style="margin:auto; width: 200px;">
+                        <!--CHECK IF THESE ARE EMPTY!-->    
+                        <div class="form-group" style="text-align: center;"> 
+                            <label class="whiteText" style="padding-top: 30 px">Amorus ID:</label>
+                            <input class="form-control" id="id" placeholder="Amorus ID" name="id" style="margin:auto; width: 200px;">
 
-                <div style="margin-top: 20px"></div>
+                            <div style="margin-top: 20px"></div>
 
-                <input class="btn btn-light" type="submit" style="text-align: center;" href="/doLogin">
+                            <input class="btn btn-light" type="submit" style="text-align: center;" href="/doLogin">
+                        </div>
+                    </form>
+                </div>
+                
+        
+
+                <div class="col-lg">
+
+                    <button type="submit" class="btn btn-danger" href="/">New Account</button>
+
+                </div>
+
             </div>
-        </form>
-
+        </div>  
     </body>
 </html>
