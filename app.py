@@ -16,7 +16,7 @@ dataSet = pd.read_csv("Backend/population.csv")
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('searchResults.html')
 
 @app.route('/matchmaker')
 def matchmaker():
@@ -61,7 +61,10 @@ def returnRandomProfile():
 
 @app.route("/uploadData", methods=['GET', 'POST'])
 def uploadData():
+    global isSignedIn
     global userFeatures
+
+    isSignedIn = True
 
     #oh god
     userFeatures[0] = request.form['name']
@@ -143,6 +146,7 @@ def continueSearch():
     training_labels.append(request.form['profileRating'])
 
     if profilesShown >= 20:
+        #call function which returns matrix of candidates and their attributes
         return render_template("searchResults.html")
     else:
         profilesShown+=1
