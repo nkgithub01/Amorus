@@ -12,6 +12,8 @@ userFeatures = []
 profilesShown = 0
 training_labels = []
 
+dataSet = pd.read_csv("Backend/population.csv")
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -51,7 +53,7 @@ def doLogin():
 def returnRandomProfile():
     #get data from csv of random user and return in list (in order)
     randInt = random.randrange(1, 59947, 1)
-    dataSet = pd.read_csv("Backend/population.csv")
+    
     
     features = []
     
