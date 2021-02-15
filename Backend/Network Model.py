@@ -362,7 +362,7 @@ def add_random_neighbors_and_lin_class_users(population, max_friends=25, num_dis
         dump(linear_classifiers2[i], f'Linear Classifiers/{i}.joblib')
         # test to make sure you can reload it and it predicts properly
         a = load(f'Linear Classifiers/{i}.joblib')
-        print("Percents:\n")
+        print("\nPercents:\n")
         for percent in a.predict(training_examples):
             print(percent)
 
@@ -386,7 +386,7 @@ def add_random_neighbors_and_lin_class_users(population, max_friends=25, num_dis
         User(list(population.loc[id]), linear_classifiers[id], id)
 
     # rewrite to the csv file
-    population.to_csv("populations2.csv", index=False)
+    population.to_csv(saved_database_of_users_in_csv, index=False)
 
 
 def add_preexisting_users():
