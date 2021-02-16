@@ -18,7 +18,6 @@ dataSet = nm.population
 
 @app.route('/')
 def home():
-    print("hi")
     return render_template('index.html')
 
 @app.route('/matchmaker')
@@ -54,7 +53,7 @@ def doLogin():
 def returnRandomProfile():
     global dataSet
 
-    randInt = random.randrange(1, dataSet.shape[0], 1)
+    randInt = random.randrange(0, dataSet.shape[0])
     features = []
     
     for i in dataSet.iloc[randInt]:
@@ -153,7 +152,7 @@ def continueSearch():
 
     training_labels[profilesShown-1][1] = request.form['profileRating']
 
-    if profilesShown >= 2:
+    if profilesShown >= 20:
         #call function which returns matrix of candidates and their attributes
         nm.add_new_user(userFeatures, training_labels)
         return render_template("searchResults.html")
