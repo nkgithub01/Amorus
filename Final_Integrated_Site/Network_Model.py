@@ -13,9 +13,9 @@ from collections import deque
 
 # the id of a user is just their index / row-1 in the dataframe population
 # first 2 elements are name and neighbors, rest are the trainable features
-saved_database_of_users_in_csv = "population 1k.csv"
+saved_database_of_users_in_csv = "population.csv"
 
-saved_folder_of_linear_classifiers = "Linear Classifiers 1k"
+saved_folder_of_linear_classifiers = "Linear Classifiers"
 
 population = None
 
@@ -434,10 +434,10 @@ mn_perc = 100
 mx_perc = 0
 '''
 # for 1000 people with 1-25 neighbors:
-# the the average total connected users = 126.37, the min num = 14, and the mx = 275
-# the the average percent compatibility of the top 10 most compatible connected users = 86.75%,
+# the the average total connected users = 126.213, the min num = 10, and the mx = 235
+# the the average percent compatibility of the top 10 most compatible connected users = 86.66%,
 # the min max percent compatibility = 16.034%, and the max max percent compatibility = 99.99999999994054%
-# keep in mind that anything above 100% compatibility is ignored as overfitting
+# keep in mind that anything above 100% compatibility is ignored as overfitting (for connected users + size then)
 # cracked bfs c^(length of the path) * product of 1/(all compatibilities(both directions))
 def find_connected_users(root_user_id):
     # for testing find_connected_users
@@ -495,9 +495,9 @@ def find_connected_users(root_user_id):
         print(*visited_connected_users[i])
     
     total_visited += len(visited) - 1
-    min_visited = min(min_visited, len(visited)-1)
-    max_visited = max(max_visited, len(visited)-1)
-    sum_comp_perc += sum([x for x,y in visited_connected_users[:10]])
+    min_visited = min(min_visited, len(visited_connected_users))
+    max_visited = max(max_visited, len(visited_connected_users))
+    sum_comp_perc += sum([x for x, y in visited_connected_users[:10]])
     mn_perc = min(mn_perc, visited_connected_users[0][0])
     mx_perc = max(mx_perc, visited_connected_users[0][0])
     '''
@@ -512,6 +512,7 @@ def main():
     add_preexisting_users()
     check_loaded_correctly()
     # for testing find_connected_users
+
     '''
     find_connected_users(1002)
     
