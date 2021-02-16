@@ -13,7 +13,7 @@ import random
 
 # the id of a user is just their index / row-1 in the dataframe population
 # first 2 elements are name and neighbors, rest are the trainable features
-saved_database_of_users_in_csv = "populations.csv"
+saved_database_of_users_in_csv = "population.csv"
 
 population = None
 
