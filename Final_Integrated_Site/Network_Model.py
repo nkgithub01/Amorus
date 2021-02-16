@@ -479,28 +479,29 @@ def find_connected_users(root_user_id):
                     q.append([neighbor, new_path_length])
 
     visited.remove(root_user_id)
-    visited_compatible_users = \
+    visited_connected_users = \
         [[(id_to_user[root_user_id].linear_classifier.predict([make_features(id_to_user[user].features_list)])[0])*100, user]
                                for user in visited]
     # unrealistic for 100% compatibility
-    visited_compatible_users = [[max(0, compatibility), user] for compatibility, user in visited_compatible_users if compatibility < 100]
-    visited_compatible_users.sort(reverse=True)
-    if len(visited_compatible_users) < 10:
-        visited_compatible_users.extend([[0, "NoName"] for i in range(10-len(visited_compatible_users))])
+    visited_connected_users = [[max(0, compatibility), user] for compatibility, user in visited_connected_users if compatibility < 100]
+    visited_connected_users.sort(reverse=True)
+    # padding so that even if there are less than 10 connected users there will be "nonexistent" users to prevent errors
+    if len(visited_connected_users) < 10:
+        visited_connected_users.extend([[0, -1] for i in range(10-len(visited_connected_users))])
     # for testing find_connected_users
     '''
-    for i in range(len(visited_compatible_users)):
-        print(*visited_compatible_users[i])
+    for i in range(len(visited_connected_users)):
+        print(*visited_connected_users[i])
     
     total_visited += len(visited) - 1
     min_visited = min(min_visited, len(visited)-1)
     max_visited = max(max_visited, len(visited)-1)
-    sum_comp_perc += sum([x for x,y in visited_compatible_users[:10]])
-    mn_perc = min(mn_perc, visited_compatible_users[0][0])
-    mx_perc = max(mx_perc, visited_compatible_users[0][0])
+    sum_comp_perc += sum([x for x,y in visited_connected_users[:10]])
+    mn_perc = min(mn_perc, visited_connected_users[0][0])
+    mx_perc = max(mx_perc, visited_connected_users[0][0])
     '''
 
-    return [len(visited_compatible_users), visited_compatible_users[:10]]
+    return [len(visited_connected_users), visited_connected_users[:10]]
 
 ##############################################################################################################
 
