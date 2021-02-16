@@ -428,7 +428,7 @@ def matchmake(user_id):
 
 
 def main():
-    add_random_neighbors_and_lin_class_users()
+    #add_random_neighbors_and_lin_class_users()
     add_preexisting_users()
     check_loaded_correctly()
     # add_new_user()
