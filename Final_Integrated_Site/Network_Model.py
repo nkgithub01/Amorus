@@ -203,8 +203,12 @@ class User:
         if type == "new_user":
             # we use inputted the list of user features from the website
             self.features['name'] = user_features['name']
+            digits_and_space = " 0123456789"
+            user_features['neighbors'] = ''.join([i for i in user_features['neighbors'] if i in digits_and_space])
             self.features['neighbors'] = \
-                dict(zip(map(int,user_features['neighbors'].split()),[0]*len(user_features['neighbors'].split())))
+                dict(zip(map(int, user_features['neighbors'].split()), [0]*len(user_features['neighbors'].split())))
+            self.features['neighbors'] = {id: 0 for id in self.features['neighbors']
+                                          if id < population.shape[0]}
             for feature in features[2:-1]:
                 if feature in categories:
                     self.features[feature] = user_features[feature]
