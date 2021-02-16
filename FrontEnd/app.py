@@ -1,9 +1,7 @@
 from flask import Flask, render_template, request
 import pandas as pd
 import numpy as np
-from os import path
 import random
-
 #testt
 app = Flask(__name__)
 
@@ -88,7 +86,7 @@ def uploadData():
         userFeatures[17] = request.form['religion']
         userFeatures[18] = request.form['smokes']
         userFeatures[19] = request.form['speaks']
-        
+
         return render_template("homeLoggedIn.html", handle=userFeatures[0], pog = userFeatures)
     except Exception:
         return "bro u dummy thicc: go back and fill out *ALL* the forms >:C"
