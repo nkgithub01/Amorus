@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from joblib import dump, load
 import random
+from collections import deque
 
 # input and global variables
 ###################################################################################################################
@@ -12,7 +13,7 @@ import random
 
 # the id of a user is just their index / row-1 in the dataframe population
 # first 2 elements are name and neighbors, rest are the trainable features
-saved_database_of_users_in_csv = "population.csv"
+saved_database_of_users_in_csv = "populations.csv"
 
 population = None
 
@@ -414,7 +415,7 @@ def add_new_user(user_features, training_labels):
     if not added_preexisting_data:
         print("Add the preexisting users first!")
     else:
-        User("new_user",user_features, training_labels)
+        User("new_user", user_features, training_labels)
 
 
 # add cracked bfs nitin C^(length of the path) * product of 1/(all compatibilities(both directions))
