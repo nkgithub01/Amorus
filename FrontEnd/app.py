@@ -90,10 +90,8 @@ def uploadData():
         userFeatures[19] = request.form['speaks']
 
         return render_template("homeLoggedIn.html", handle=userFeatures[0], pog = userFeatures)
-    except IOError:
-        return
-    else:
-        return "Please go back and fill out all forms :("
+    except Exception:
+        return "bro u dummy thicc: go back and fill out *ALL* the forms >:C"
 
 @app.route("/beginSearch")
 def beginSearch():
