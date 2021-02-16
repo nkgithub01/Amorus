@@ -14,6 +14,8 @@ userFeatures = {}
 profilesShown = 0
 training_labels = [[0,0]]*20
 
+userID = ""
+
 dataSet = nm.population
 
 @app.route('/')
@@ -36,16 +38,23 @@ def signIn():
 @app.route("/newAccount")
 def newAccount():
     global dataSet
+    global userID
+
+    userID = dataSet.shape[0]
     return render_template("userDataInput.html", id=dataSet.shape[0]+1) 
 
 
 @app.route("/doLogin", methods=['GET', 'POST'])
 def doLogin():
     global isSignedIn
-    isSignedIn = True
-
+    global userID
+    
+    if int(request.form['id']) >= dataSet.shape[0]:
+        return "u dummy thic fake ID"
     #check if user wants new account
     #load in all the user data
+    userID = request.form['id']
+    isSignedIn = True
     return render_template("homeLoggedIn.html", id= request.form["id"])
          
 
@@ -149,13 +158,58 @@ def beginSearch():
 def continueSearch():
     global profilesShown
     global training_labels
+    global userFeatures
 
     training_labels[profilesShown-1][1] = request.form['profileRating']
 
     if profilesShown >= 20:
         #call function which returns matrix of candidates and their attributes
         nm.add_new_user(userFeatures, training_labels)
-        return render_template("searchResults.html")
+        compatibleUsers = nm.find_connected_users(int(userID))
+
+        score1 = compatibleUsers[1][0][0]
+        name1 = dataSet["name"][compatibleUsers[1][0][1]]
+
+        score2 = compatibleUsers[1][1][0]
+        name2 = dataSet["name"][compatibleUsers[1][1][1]]
+
+        score3 = compatibleUsers[1][2][0]
+        name3 = dataSet["name"][compatibleUsers[1][2][1]]
+
+        score4 = compatibleUsers[1][3][0]
+        name4 = dataSet["name"][compatibleUsers[1][3][1]]
+
+        score5 = compatibleUsers[1][4][0]
+        name5 = dataSet["name"][compatibleUsers[1][4][1]]
+
+        score6 = compatibleUsers[1][5][0]
+        name6 = dataSet["name"][compatibleUsers[1][5][1]]
+
+        score7 = compatibleUsers[1][6][0]
+        name7 = dataSet["name"][compatibleUsers[1][6][1]]
+
+        score8 = compatibleUsers[1][7][0]
+        name8 = dataSet["name"][compatibleUsers[1][7][1]]
+
+        score9 = compatibleUsers[1][8][0]
+        name9 = dataSet["name"][compatibleUsers[1][8][1]]
+
+        score10 = compatibleUsers[1][9][0]
+        name10 = dataSet["name"][compatibleUsers[1][9][1]]
+
+
+
+        return render_template("searchResults.html", totalCompatible=compatibleUsers[0], \
+            name1=name1, score1=score1, \
+            name2=name2, score2=score2, \
+            name3=name3, score3=score3, \
+            name4=name4, score4=score4, \
+            name5=name5, score5=score5, \
+            name6=name6, score6=score6, \
+            name7=name7, score7=score7, \
+            name8=name8, score8=score8, \
+            name9=name9, score9=score9, \
+            name10=name10, score10=score10, )
     else:
         profilesShown+=1
         features = returnRandomProfile()
@@ -201,3 +255,84 @@ def continueSearch():
             smokes= smokes, \
             speaks= speaks )
 
+
+@app.route("/doMatchmake")
+def doMatchmake():
+    global userID
+    global dataSet
+
+    compatibleUsers = nm.find_connected_users(int(userID))
+
+    score1 = compatibleUsers[1][0][0]
+    if compatibleUsers[1][0][1] != -1:
+        name1 = dataSet.loc[compatibleUsers[1][0][1], "name"]
+    else:
+        name1 = "No User Found"
+
+    score2 = compatibleUsers[1][1][0]
+    if compatibleUsers[1][1][1] != -1:
+        name2 = dataSet.loc[compatibleUsers[1][1][1], "name"]
+    else:
+        name2 = "No User Found"
+
+    score3 = compatibleUsers[1][2][0]
+    if compatibleUsers[1][2][1] != -1:
+        name3 = dataSet.loc[compatibleUsers[1][2][1], "name"]
+    else:
+        name3 = "No User Found"
+
+    score4 = compatibleUsers[1][3][0]
+    if compatibleUsers[1][3][1] != -1:
+        name4 = dataSet.loc[compatibleUsers[1][3][1], "name"]
+    else:
+        name4 = "No User Found"
+
+    score5 = compatibleUsers[1][4][0]
+    if compatibleUsers[1][4][1] != -1:
+        name5 = dataSet.loc[compatibleUsers[1][4][1], "name"]
+    else:
+        name5 = "No User Found"
+
+    score6 = compatibleUsers[1][5][0]
+    if compatibleUsers[1][5][1] != -1:
+        name6 = dataSet.loc[compatibleUsers[1][5][1], "name"]
+    else:
+        name6 = "No User Found"
+
+    score7 = compatibleUsers[1][6][0]
+    if compatibleUsers[1][6][1] != -1:
+        name7 = dataSet.loc[compatibleUsers[1][6][1], "name"]
+    else:
+        name7 = "No User Found"
+
+    score8 = compatibleUsers[1][7][0]
+    if compatibleUsers[1][7][1] != -1:
+        name8 = dataSet.loc[compatibleUsers[1][7][1], "name"]
+    else:
+        name8 = "No User Found"
+
+    score9 = compatibleUsers[1][8][0]
+    if compatibleUsers[1][8][1] != -1:
+        name9 = dataSet.loc[compatibleUsers[1][8][1], "name"]
+    else:
+        name9 = "No User Found"
+
+    score10 = compatibleUsers[1][9][0]
+    if compatibleUsers[1][9][1] != -1:
+        name10 = dataSet.loc[compatibleUsers[1][9][1], "name"]
+    else:
+        name10 = "No User Found"
+
+
+
+    return render_template("searchResults.html", totalCompatible=compatibleUsers[0], \
+        name1=name1, score1=score1, \
+        name2=name2, score2=score2, \
+        name3=name3, score3=score3, \
+        name4=name4, score4=score4, \
+        name5=name5, score5=score5, \
+        name6=name6, score6=score6, \
+        name7=name7, score7=score7, \
+        name8=name8, score8=score8, \
+        name9=name9, score9=score9, \
+        name10=name10, score10=score10, id=dataSet["name"][int(userID)] )
