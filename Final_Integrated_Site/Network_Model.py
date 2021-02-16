@@ -13,7 +13,9 @@ from collections import deque
 
 # the id of a user is just their index / row-1 in the dataframe population
 # first 2 elements are name and neighbors, rest are the trainable features
-saved_database_of_users_in_csv = "populations.csv"
+saved_database_of_users_in_csv = "population 1k.csv"
+
+saved_folder_of_linear_classifiers = "Linear Classifiers 1k"
 
 population = None
 
@@ -225,9 +227,9 @@ class User:
             # create and train linear classifier and save it as a .joblib file in directory Linear Classifiers
             self.linear_classifier = LinearRegression()
             self.linear_classifier.fit(training_examples, love_interests)
-            dump(self.linear_classifier, f'Linear Classifiers/{population.shape[0]}.joblib')
-            self.features['linear classifier'] = f'Linear Classifiers/{population.shape[0]}.joblib'
-            self.features_list.append(f'Linear Classifiers/{population.shape[0]}.joblib')
+            dump(self.linear_classifier, saved_folder_of_linear_classifiers+f'/{population.shape[0]}.joblib')
+            self.features['linear classifier'] = saved_folder_of_linear_classifiers+f'/{population.shape[0]}.joblib'
+            self.features_list.append(saved_folder_of_linear_classifiers+f'/{population.shape[0]}.joblib')
 
             # testing:
             preds = self.linear_classifier.predict(training_examples)
@@ -336,10 +338,10 @@ def add_random_neighbors_and_lin_class_users(max_friends=25, num_distinct=60000,
         # create linear classifier
         linear_classifiers2.append(LinearRegression().fit(training_examples, love_interests))
         # download linear classifier to directory
-        dump(linear_classifiers2[i], f'Linear Classifiers/{i}.joblib')
+        dump(linear_classifiers2[i], saved_folder_of_linear_classifiers+f'/{i}.joblib')
         '''
         # test to make sure you can reload it and it predicts properly
-        a = load(f'Linear Classifiers/{i}.joblib')
+        a = load(saved_folder_of_linear_classifiers+f'/{i}.joblib')
         print("\nPercents:\n")
         for percent in a.predict(training_examples):
             print(percent)
@@ -353,7 +355,7 @@ def add_random_neighbors_and_lin_class_users(max_friends=25, num_distinct=60000,
             print(id)
 
         # add the linear classifiers to the dataframe and add the linear classifier to linear_classifiers
-        population.loc[id, 'linear classifier'] = f'Linear Classifiers/{id_to_classifier[id]}.joblib'
+        population.loc[id, 'linear classifier'] = saved_folder_of_linear_classifiers+f'/{id_to_classifier[id]}.joblib'
         linear_classifiers[id] = linear_classifiers2[id_to_classifier[id]]
 
     # uses the linear classifiers to find the percent that the current user is attracted to their neighbors + vice versa
@@ -426,7 +428,7 @@ def matchmake(user_id):
 
 
 def main():
-    # add_random_neighbors_and_lin_class_users()
+    add_random_neighbors_and_lin_class_users()
     add_preexisting_users()
     check_loaded_correctly()
     # add_new_user()
