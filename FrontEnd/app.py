@@ -35,7 +35,7 @@ def signIn():
 @app.route("/newAccount")
 def newAccount():
     global dataSet
-    return render_template("userDataInput.html", id=dataSet.shape[0]+2) 
+    return render_template("userDataInput.html", id=dataSet.shape[0]+1) 
 
 
 @app.route("/doLogin", methods=['GET', 'POST'])
@@ -52,7 +52,7 @@ def doLogin():
 def returnRandomProfile():
     global dataSet
 
-    randInt = random.randrange(1, 59947, 1)
+    randInt = random.randrange(1, dataSet.shape[0], 1)
     features = []
     
     for i in dataSet.iloc[randInt]:
@@ -88,7 +88,7 @@ def uploadData():
         userFeatures[17] = request.form['religion']
         userFeatures[18] = request.form['smokes']
         userFeatures[19] = request.form['speaks']
-
+        
         return render_template("homeLoggedIn.html", handle=userFeatures[0], pog = userFeatures)
     except Exception:
         return "bro u dummy thicc: go back and fill out *ALL* the forms >:C"
