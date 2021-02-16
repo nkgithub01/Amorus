@@ -486,6 +486,7 @@ def find_connected_users(root_user_id):
     visited_connected_users = [[max(0, compatibility), user] for compatibility, user in visited_connected_users if compatibility < 100]
     visited_connected_users.sort(reverse=True)
     # padding so that even if there are less than 10 connected users there will be "nonexistent" users to prevent errors
+    len_before_pad = len(visited_connected_users)
     if len(visited_connected_users) < 10:
         visited_connected_users.extend([[0, -1] for i in range(10-len(visited_connected_users))])
     # for testing find_connected_users
@@ -501,7 +502,7 @@ def find_connected_users(root_user_id):
     mx_perc = max(mx_perc, visited_connected_users[0][0])
     '''
 
-    return [len(visited_connected_users), visited_connected_users[:10]]
+    return [len_before_pad, visited_connected_users[:10]]
 
 ##############################################################################################################
 
