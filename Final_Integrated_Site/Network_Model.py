@@ -423,11 +423,33 @@ def add_new_user(user_features, training_labels):
     else:
         User("new_user", user_features, training_labels)
 
-# for 1000 people with 1-25 neighbors, the mn num of total connected users = 13, the mx = 265 and the average = 127
+
+# for testing find_connected_users
+'''
+sum_comp_perc = 0
+total_visited = 0
+min_visited = 100
+max_visited = 0
+mn_perc = 100
+mx_perc = 0
+'''
+# for 1000 people with 1-25 neighbors:
+# the the average total connected users = 117, the min num = 12, and the mx = 250
+# the the average percent compatibility of the top 10 most compatible connected users = 85.80%,
+# the min max percent compatibility = 0%, and the max max percent compatibility = 99.999%
+# keep in mind that anything above 100% compatibility is ignored as overfitting
 # cracked bfs c^(length of the path) * product of 1/(all compatibilities(both directions))
 def find_connected_users(root_user_id):
-    global mn
-    global mx
+    # for testing find_connected_users
+    '''
+    global sum_comp_perc
+    global total_visited
+    global mx_perc
+    global mn_perc
+    global min_visited
+    global max_visited
+    '''
+
     max_length = 10**3
     c = 10
     # queue where each entry is id, path length
@@ -443,23 +465,38 @@ def find_connected_users(root_user_id):
                 if adj[curr_user][neighbor] == 0:
                     new_path_length = max_length + 1
                 else:
-                    new_path_length *= 1/adj[curr_user][neighbor]
+                    # unrealistic for 100% compatibility
+                    new_path_length *= 1/min(adj[curr_user][neighbor], 0.95)
                 if adj[neighbor][curr_user] == 0:
                     new_path_length = max_length + 1
                 else:
-                    new_path_length *= 1/adj[neighbor][curr_user]
+                    # unrealistic for 100% compatibility
+                    new_path_length *= 1/min(adj[neighbor][curr_user], 0.95)
 
                 if new_path_length <= max_length:
                     visited.add(neighbor)
                     q.append([neighbor, new_path_length])
 
     visited.remove(root_user_id)
-    visited_compatibilities = \
-        [[id_to_user[root_user_id].linear_classifier.predict([make_features(id_to_user[user].features_list)])[0]*100, user]
+    visited_compatible_users = \
+        [[(id_to_user[root_user_id].linear_classifier.predict([make_features(id_to_user[user].features_list)])[0])*100, user]
                                for user in visited]
-    visited_compatibilities.sort(reverse=True)
-
-    return [len(visited_compatibilities), visited_compatibilities[:10]]
+    # unrealistic for 100% compatibility
+    visited_compatible_users = [[max(0, compatibility), user] for compatibility, user in visited_compatible_users if compatibility < 100]
+    visited_compatible_users.sort(reverse=True)
+    # for testing find_connected_users
+    '''
+    for i in range(len(visited_compatible_users)):
+        print(*visited_compatible_users[i])
+    
+    total_visited += len(visited) - 1
+    min_visited = min(min_visited, len(visited)-1)
+    max_visited = max(max_visited, len(visited)-1)
+    sum_comp_perc += sum([x for x,y in visited_compatible_users[:10]])
+    mn_perc = min(mn_perc, visited_compatible_users[0][0])
+    mx_perc = max(mx_perc, visited_compatible_users[0][0])
+    '''
+    return [len(visited_compatible_users), visited_compatible_users[:10]]
 
 ##############################################################################################################
 
@@ -468,5 +505,15 @@ def main():
     #add_random_neighbors_and_lin_class_users()
     add_preexisting_users()
     check_loaded_correctly()
+    # for testing find_connected_users
+    '''
+    find_connected_users(87)
+    for i in range(1000):
+        find_connected_users(i)
 
+    print(total_visited/1000)
+    print(min_visited, max_visited)
+    print(sum_comp_perc/10000)
+    print(mn_perc, mx_perc)
+    '''
 main()
