@@ -425,7 +425,7 @@ def add_new_user(user_features, training_labels):
 
 # for 1000 people with 1-25 neighbors, the mn num of total connected users = 13, the mx = 265 and the average = 127
 # cracked bfs c^(length of the path) * product of 1/(all compatibilities(both directions))
-def matchmake(root_user_id):
+def find_connected_users(root_user_id):
     global mn
     global mx
     max_length = 10**3
