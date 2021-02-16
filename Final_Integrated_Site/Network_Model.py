@@ -434,9 +434,9 @@ mn_perc = 100
 mx_perc = 0
 '''
 # for 1000 people with 1-25 neighbors:
-# the the average total connected users = 117, the min num = 12, and the mx = 250
-# the the average percent compatibility of the top 10 most compatible connected users = 85.80%,
-# the min max percent compatibility = 0%, and the max max percent compatibility = 99.999%
+# the the average total connected users = 126.37, the min num = 14, and the mx = 275
+# the the average percent compatibility of the top 10 most compatible connected users = 86.75%,
+# the min max percent compatibility = 16.034%, and the max max percent compatibility = 99.99999999994054%
 # keep in mind that anything above 100% compatibility is ignored as overfitting
 # cracked bfs c^(length of the path) * product of 1/(all compatibilities(both directions))
 def find_connected_users(root_user_id):
@@ -449,8 +449,9 @@ def find_connected_users(root_user_id):
     global min_visited
     global max_visited
     '''
-
-    max_length = 10**3
+    # adds constraint that all connected users must be <= 3 users away
+    # and only 3 in the case that percent compatibilities are nearly maxed out >= 0.95% for every person
+    max_length = (1/0.95)**4*10**3 + 1
     c = 10
     # queue where each entry is id, path length
     q = deque([[root_user_id, 1]])
@@ -484,6 +485,8 @@ def find_connected_users(root_user_id):
     # unrealistic for 100% compatibility
     visited_compatible_users = [[max(0, compatibility), user] for compatibility, user in visited_compatible_users if compatibility < 100]
     visited_compatible_users.sort(reverse=True)
+    if len(visited_compatible_users) < 10:
+        visited_compatible_users.extend([[0, "NoName"] for i in range(10-len(visited_compatible_users))])
     # for testing find_connected_users
     '''
     for i in range(len(visited_compatible_users)):
@@ -496,6 +499,7 @@ def find_connected_users(root_user_id):
     mn_perc = min(mn_perc, visited_compatible_users[0][0])
     mx_perc = max(mx_perc, visited_compatible_users[0][0])
     '''
+
     return [len(visited_compatible_users), visited_compatible_users[:10]]
 
 ##############################################################################################################
@@ -507,7 +511,8 @@ def main():
     check_loaded_correctly()
     # for testing find_connected_users
     '''
-    find_connected_users(87)
+    find_connected_users(1002)
+    
     for i in range(1000):
         find_connected_users(i)
 
