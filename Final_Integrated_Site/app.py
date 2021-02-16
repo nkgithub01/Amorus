@@ -92,7 +92,7 @@ def uploadData():
         userFeatures['smokes'] = request.form['smokes']
         userFeatures['speaks'] = request.form['speaks']
 
-        return render_template("beginSearch", handle=userFeatures[0])
+        return render_template("beginSearch", handle=userFeatures["name"])
     except Exception:
         return "bro u dummy thicc: go back and fill out *ALL* the forms >:C"
 
