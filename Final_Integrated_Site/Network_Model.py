@@ -238,16 +238,16 @@ class User:
             preds2 = self.linear_classifier.predict(random_sample)
 
         
-            print(f"Predictions for the {len(training_examples)} people you entered")
+            print(f"\nPredictions for the {len(training_examples)} people you entered")
             for i in preds:
                 print(i)
-            print("Average predicted percentage that you are attracted to the 20 people you entered:",
+            print("\nAverage predicted percentage that you are attracted to the 20 people you entered:",
                   sum(preds) / len(training_examples))
 
             print("\nPredictions for 20 random people:")
             for i in preds2:
                 print(i)
-            print("Average predicted percentage that you are attracted to 20 random people:",
+            print("\nAverage predicted percentage that you are attracted to 20 random people:",
                   sum(preds2)/20)
         else:
             # just create the linear classifier using the previously stored linear classifier
