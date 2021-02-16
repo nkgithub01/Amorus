@@ -233,26 +233,6 @@ class User:
             dump(self.linear_classifier, saved_folder_of_linear_classifiers+f'/{population.shape[0]}.joblib')
             self.features['linear classifier'] = saved_folder_of_linear_classifiers+f'/{population.shape[0]}.joblib'
             self.features_list.append(saved_folder_of_linear_classifiers+f'/{population.shape[0]}.joblib')
-
-            # testing:
-            preds = self.linear_classifier.predict(training_examples)
-            random_sample = population.sample(20)
-            random_sample = make_features_all([list(random_sample.iloc[i]) for i in range(20)])
-            preds2 = self.linear_classifier.predict(random_sample)
-
-            '''
-            print(f"\nPredictions for the {len(training_examples)} people you entered")
-            for i in preds:
-                print(i)
-            print(f"\nAverage predicted percentage that you are attracted to the {len(training_examples)} people you entered:",
-                  sum(preds) / len(training_examples))
-
-            print("\nPredictions for 20 random people:")
-            for i in preds2:
-                print(i)
-            print("\nAverage predicted percentage that you are attracted to 20 random people:",
-                  sum(preds2)/20)
-            '''
         else:
             # just create the linear classifier using the previously stored linear classifier
             self.linear_classifier = linear_classifier
@@ -286,7 +266,6 @@ class User:
 
             # update csv
             population.to_csv(saved_database_of_users_in_csv, index=False)
-
         elif user_id >= 0:
             id_to_user[user_id] = self
         # print("\nYou've been Added!")
@@ -343,13 +322,6 @@ def add_random_neighbors_and_lin_class_users(max_friends=25, num_distinct=60000,
         linear_classifiers2.append(LinearRegression().fit(training_examples, love_interests))
         # download linear classifier to directory
         dump(linear_classifiers2[i], saved_folder_of_linear_classifiers+f'/{i}.joblib')
-        '''
-        # test to make sure you can reload it and it predicts properly
-        a = load(saved_folder_of_linear_classifiers+f'/{i}.joblib')
-        print("\nPercents:\n")
-        for percent in a.predict(training_examples):
-            print(percent)
-        '''
 
     # assign each user a random classifier the output is the idx of the classifier in linear_classifiers2
     # this classifier has been saved at 'Linear Classifiers/idx.joblib'
@@ -424,15 +396,6 @@ def add_new_user(user_features, training_labels):
         User("new_user", user_features, training_labels)
 
 
-# for testing find_connected_users
-'''
-sum_comp_perc = 0
-total_visited = 0
-min_visited = 100
-max_visited = 0
-mn_perc = 100
-mx_perc = 0
-'''
 # for 1000 people with 1-25 neighbors:
 # the the average total connected users = 126.213, the min num = 10, and the mx = 235
 # the the average percent compatibility of the top 10 most compatible connected users = 86.66%,
@@ -440,15 +403,6 @@ mx_perc = 0
 # keep in mind that anything above 100% compatibility is ignored as overfitting (for connected users + size then)
 # cracked bfs c^(length of the path) * product of 1/(all compatibilities(both directions))
 def find_connected_users(root_user_id):
-    # for testing find_connected_users
-    '''
-    global sum_comp_perc
-    global total_visited
-    global mx_perc
-    global mn_perc
-    global min_visited
-    global max_visited
-    '''
     # adds constraint that all connected users must be <= 3 users away
     # and only 3 in the case that percent compatibilities are nearly maxed out >= 0.95% for every person
     max_length = (1/0.95)**4*10**3 + 1
@@ -489,18 +443,6 @@ def find_connected_users(root_user_id):
     len_before_pad = len(visited_connected_users)
     if len(visited_connected_users) < 10:
         visited_connected_users.extend([[0, -1] for i in range(10-len(visited_connected_users))])
-    # for testing find_connected_users
-    '''
-    for i in range(len(visited_connected_users)):
-        print(*visited_connected_users[i])
-    
-    total_visited += len(visited) - 1
-    min_visited = min(min_visited, len(visited_connected_users))
-    max_visited = max(max_visited, len(visited_connected_users))
-    sum_comp_perc += sum([x for x, y in visited_connected_users[:10]])
-    mn_perc = min(mn_perc, visited_connected_users[0][0])
-    mx_perc = max(mx_perc, visited_connected_users[0][0])
-    '''
 
     return [len_before_pad, visited_connected_users[:10]]
 
@@ -511,17 +453,5 @@ def main():
     #add_random_neighbors_and_lin_class_users()
     add_preexisting_users()
     check_loaded_correctly()
-    # for testing find_connected_users
 
-    '''
-    find_connected_users(1002)
-    
-    for i in range(1000):
-        find_connected_users(i)
-
-    print(total_visited/1000)
-    print(min_visited, max_visited)
-    print(sum_comp_perc/10000)
-    print(mn_perc, mx_perc)
-    '''
 main()
