@@ -203,8 +203,12 @@ class User:
         if type == "new_user":
             # we use inputted the list of user features from the website
             self.features['name'] = user_features['name']
+            digits_and_space = " 0123456789"
+            user_features['neighbors'] = ''.join([i for i in user_features['neighbors'] if i in digits_and_space])
             self.features['neighbors'] = \
-                dict(zip(map(int,user_features['neighbors'].split()),[0]*len(user_features['neighbors'].split())))
+                dict(zip(map(int, user_features['neighbors'].split()), [0]*len(user_features['neighbors'].split())))
+            self.features['neighbors'] = {id: 0 for id in self.features['neighbors']
+                                          if id < population.shape[0]}
             for feature in features[2:-1]:
                 if feature in categories:
                     self.features[feature] = user_features[feature]
@@ -238,16 +242,16 @@ class User:
             preds2 = self.linear_classifier.predict(random_sample)
 
         
-            print(f"Predictions for the {len(training_examples)} people you entered")
+            print(f"\nPredictions for the {len(training_examples)} people you entered")
             for i in preds:
                 print(i)
-            print("Average predicted percentage that you are attracted to the 20 people you entered:",
+            print("\nAverage predicted percentage that you are attracted to the 20 people you entered:",
                   sum(preds) / len(training_examples))
 
             print("\nPredictions for 20 random people:")
             for i in preds2:
                 print(i)
-            print("Average predicted percentage that you are attracted to 20 random people:",
+            print("\nAverage predicted percentage that you are attracted to 20 random people:",
                   sum(preds2)/20)
         else:
             # just create the linear classifier using the previously stored linear classifier
