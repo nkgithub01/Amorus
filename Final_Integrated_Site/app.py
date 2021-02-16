@@ -14,7 +14,7 @@ userFeatures = {}
 profilesShown = 0
 training_labels = [[0,0]]*20
 
-dataSet = pd.read_csv("../Backend/population.csv")
+dataSet = nm.population
 
 @app.route('/')
 def home():
@@ -77,7 +77,7 @@ def uploadData():
         userFeatures['status'] = request.form['status']
         userFeatures['sex'] = request.form['sex']
         userFeatures['orientation'] = request.form['orientation']
-        userFeatures['bodyType'] = request.form['bodyType']
+        userFeatures['body_type'] = request.form['bodyType']
         userFeatures['diet'] = request.form['diet']
         userFeatures['drinks'] = request.form['drinks']
         userFeatures['drugs'] = request.form['drugs']
@@ -92,8 +92,9 @@ def uploadData():
         userFeatures['smokes'] = request.form['smokes']
         userFeatures['speaks'] = request.form['speaks']
 
-        return render_template("beginSearch", handle=userFeatures["name"])
-    except Exception:
+        return beginSearch()
+
+    except Exception as e:
         return "bro u dummy thicc: go back and fill out *ALL* the forms >:C"
 
 @app.route("/beginSearch")
@@ -103,7 +104,7 @@ def beginSearch():
     
     features = returnRandomProfile()
 
-    training_labels[profilesShown-1] = [features[20], 0]
+    training_labels[profilesShown-1] = [features[-1], 0]
     name = features[0]
     age = features[2]
     status= features[3]
@@ -160,7 +161,7 @@ def continueSearch():
         profilesShown+=1
         features = returnRandomProfile()
 
-        training_labels[profilesShown-1] = [features[20], 0]
+        training_labels[profilesShown-1] = [features[-1], 0]
         name = features[0]
         age = features[2]
         status= features[3]
