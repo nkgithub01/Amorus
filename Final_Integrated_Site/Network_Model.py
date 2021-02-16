@@ -478,7 +478,7 @@ def add_preexisting_users():
 
 
 # ONLY ADD NEW USERS AFTER LOADING PREEXISTING DATA (will mess up indexing/ids if you don't)
-def add_new_user():
+def add_new_user(user_features):
     if not added_preexisting_data:
         print("Add the preexisting users first!")
     else:
