@@ -27,7 +27,7 @@ names_to_id = None
 # id_to_user[id] points to the object of type User associated with this id
 id_to_user = None
 
-# adjacency list for the matchfinding function
+# adjacency list for the matchfinding function, list of dictionaries with neighbor : compatibility key value pairs
 adj = None
 
 linear_classifiers = None
@@ -207,8 +207,7 @@ class User:
             user_features['neighbors'] = ''.join([i for i in user_features['neighbors'] if i in digits_and_space])
             self.features['neighbors'] = \
                 dict(zip(map(int, user_features['neighbors'].split()), [0]*len(user_features['neighbors'].split())))
-            self.features['neighbors'] = {id: 0 for id in self.features['neighbors']
-                                          if id < population.shape[0]}
+            self.features['neighbors'] = {id: 0 for id in self.features['neighbors'] if id < population.shape[0]}
             for feature in features[2:-1]:
                 if feature in categories:
                     self.features[feature] = user_features[feature]
@@ -241,11 +240,11 @@ class User:
             random_sample = make_features_all([list(random_sample.iloc[i]) for i in range(20)])
             preds2 = self.linear_classifier.predict(random_sample)
 
-        
+            '''
             print(f"\nPredictions for the {len(training_examples)} people you entered")
             for i in preds:
                 print(i)
-            print("\nAverage predicted percentage that you are attracted to the 20 people you entered:",
+            print(f"\nAverage predicted percentage that you are attracted to the {len(training_examples)} people you entered:",
                   sum(preds) / len(training_examples))
 
             print("\nPredictions for 20 random people:")
@@ -253,6 +252,7 @@ class User:
                 print(i)
             print("\nAverage predicted percentage that you are attracted to 20 random people:",
                   sum(preds2)/20)
+            '''
         else:
             # just create the linear classifier using the previously stored linear classifier
             self.linear_classifier = linear_classifier
@@ -423,10 +423,43 @@ def add_new_user(user_features, training_labels):
     else:
         User("new_user", user_features, training_labels)
 
+# for 1000 people with 1-25 neighbors, the mn num of total connected users = 13, the mx = 265 and the average = 127
+# cracked bfs c^(length of the path) * product of 1/(all compatibilities(both directions))
+def matchmake(root_user_id):
+    global mn
+    global mx
+    max_length = 10**3
+    c = 10
+    # queue where each entry is id, path length
+    q = deque([[root_user_id, 1]])
+    visited = {root_user_id}
 
-# add cracked bfs nitin C^(length of the path) * product of 1/(all compatibilities(both directions))
-def matchmake(user_id):
-    pass
+    while q:
+        curr_user, path_length = q.popleft()
+
+        for neighbor in adj[curr_user]:
+            if neighbor not in visited:
+                new_path_length = c*path_length
+                if adj[curr_user][neighbor] == 0:
+                    new_path_length = max_length + 1
+                else:
+                    new_path_length *= 1/adj[curr_user][neighbor]
+                if adj[neighbor][curr_user] == 0:
+                    new_path_length = max_length + 1
+                else:
+                    new_path_length *= 1/adj[neighbor][curr_user]
+
+                if new_path_length <= max_length:
+                    visited.add(neighbor)
+                    q.append([neighbor, new_path_length])
+
+    visited.remove(root_user_id)
+    visited_compatibilities = \
+        [[id_to_user[root_user_id].linear_classifier.predict([make_features(id_to_user[user].features_list)])[0]*100, user]
+                               for user in visited]
+    visited_compatibilities.sort(reverse=True)
+
+    return [len(visited_compatibilities), visited_compatibilities[:10]]
 
 ##############################################################################################################
 
@@ -435,7 +468,5 @@ def main():
     #add_random_neighbors_and_lin_class_users()
     add_preexisting_users()
     check_loaded_correctly()
-    # add_new_user()
-    # matchmake(10)
 
 main()
