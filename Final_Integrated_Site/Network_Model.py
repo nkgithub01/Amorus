@@ -1,7 +1,6 @@
 import pandas as pd
 # import tensorflow as tf
 from sklearn.linear_model import LinearRegression
-import json
 from joblib import dump, load
 import random
 
@@ -189,7 +188,7 @@ def make_edge(u, v):
 # adding Users/ loading preexisting ones from the database and matchmake function
 ###################################################################################################################
 class User:
-    def __init__(self, user_features = None, linear_classifier = None, user_id = -1):
+    def __init__(self, type, user_features, linear_classifier, user_id = -1):
         # dict of features that have user_features as values
         self.features = dict(zip(features, [None]*len(features)))
         # user features list
@@ -198,94 +197,30 @@ class User:
         self.linear_classifier = None
 
         # setup person's features -> order matters create feature_list then create features later
-        if user_features is None:
-            # user needs to input their personal features
-
-            print("\nEnter your name")
-            inp = input().strip()
-            self.features['name'] = inp
-
+        if type == "new_user":
+            # we use inputted the list of user features from the website
+            self.features['name'] = user_features['name']
+            self.features['neighbors'] = \
+                dict(zip(map(int,user_features['neighbors'].split()),[0]*len(user_features['neighbors'].split())))
             for feature in features[2:-1]:
                 if feature in categories:
-                    # categorical feature
-                    print("\nEnter the number of the option that best describes you")
-                    print(feature + ':')
-                    for a, b in enumerate(categories[feature]):
-                        print(str(a) + '. ' + b)
-                    inp = int(input())
-                    self.features[feature] = categories_rev[feature][inp]
-
+                    self.features[feature] = user_features[feature]
                 else:
-                    # numerical feature
-                    print('\nEnter your ' + feature + ':')
-                    inp = int(input())
-                    self.features[feature] = inp
-
-            self.features['neighbors'] = {}
-            print("\nNow let's connect you to your friends :)")
-            while True:
-                print('\nEnter the name of the person who you are friends with or enter \"amorus\" to stop')
-                inp = input().strip()
-
-                if inp == 'amorus':
-                    break
-                else:
-                    if inp not in names_to_id:
-                        print("\nSorry! It seems your friend is not a user :(")
-                    else:
-                        print("\nEnter the id number of the person who is most similar to your friend")
-                        for id in names_to_id[inp]:
-                            print("\nID:", str(id))
-                            print("Description:\n")
-                            for feature in features:
-                                print(feature + ':', population.loc[id, feature])
-
-                        inp = int(input())
-                        self.features['neighbors'][inp] = 0
+                    self.features[feature] = float(user_features[feature])
 
             for feature in features[:-1]:
-                print(feature)
                 self.features_list.append(self.features[feature])
-
         else:
             # just create this object of type User using the previously stored user_features
             self.features_list = user_features
             self.features = {features[i]: user_features[i] for i in range(len(features))}
 
         # setup linear_classifier
-        if linear_classifier is None:
-            # make new linear classifier
-            # user needs to input who they like to create this linear classifier
+        if type == "new_user":
+            # we use the inputted list of id, percent like pairs from the website
+            training_examples = make_features_all([list(population.iloc[int(id)]) for id, percent in linear_classifier])
+            love_interests = [float(percent)/100 for id, percent in linear_classifier]
 
-            # user input determines the user's love interest in some random users
-            training_examples = population.sample(min(population.shape[0], 5))
-            love_interests = [0]*training_examples.shape[0]
-            print('''\nLet's find out who you like!
-For each person, enter a number from 0 to 100:
-0 means that this person is not attractive at all
-100 means they are as attractive as a person can possibly be''')
-            for i in range(training_examples.shape[0]):
-                example = list(training_examples.iloc[i])
-                print("\nDescription:\n")
-                for j in range(2, len(features)-1):
-                    feature = features[j]
-                    print(feature + ':', example[j])
-
-                while True:
-                    print("\nPlease enter an integer between 0 and 100:")
-                    inp = input().strip()
-                    try:
-                        inp = int(inp)
-                        if not (0 <= inp <= 100):
-                            pass
-                        else:
-                            love_interests[i] = inp / 100
-                            break
-                    except ValueError:
-                        pass
-
-            # convert dataframe to list of lists and then convert the categorical data to numerical
-            training_examples = make_features_all([list(training_examples.iloc[i]) for i in range(training_examples.shape[0])])
             # create and train linear classifier and save it as a .joblib file in directory Linear Classifiers
             self.linear_classifier = LinearRegression()
             self.linear_classifier.fit(training_examples, love_interests)
@@ -293,7 +228,6 @@ For each person, enter a number from 0 to 100:
             self.features['linear classifier'] = f'Linear Classifiers/{population.shape[0]}.joblib'
             self.features_list.append(f'Linear Classifiers/{population.shape[0]}.joblib')
 
-            '''
             # testing:
             preds = self.linear_classifier.predict(training_examples)
             random_sample = population.sample(20)
@@ -312,15 +246,13 @@ For each person, enter a number from 0 to 100:
                 print(i)
             print("Average predicted percentage that you are attracted to 20 random people:",
                   sum(preds2)/20)
-            '''
         else:
             # just create the linear classifier using the previously stored linear classifier
             self.linear_classifier = linear_classifier
-            pass
 
         # edit some global variables to incorporate this User into the network of existing Users
         # Also save the new user to the csv file population
-        if user_id == -1:
+        if type == "new_user":
             # update global vars
             id_to_user.append(self)
 
@@ -341,7 +273,7 @@ For each person, enter a number from 0 to 100:
 
             adj.append(self.features['neighbors'])
 
-            # udpate instance attributes
+            # update instance attributes
             self.features_list[1] = population.loc[population.shape[0] - 1, 'neighbors']
             self.features['neighbors'] = population.loc[population.shape[0] - 1, 'neighbors']
 
@@ -472,22 +404,22 @@ def add_preexisting_users():
         if id % 1000 == 0:
             print(id)
 
-        User(list(population.loc[id]), linear_classifiers[id], id)
+        User("existing_user", list(population.loc[id]), linear_classifiers[id], id)
 
     added_preexisting_data = True
 
 
 # ONLY ADD NEW USERS AFTER LOADING PREEXISTING DATA (will mess up indexing/ids if you don't)
-def add_new_user(user_features):
+def add_new_user(user_features, training_labels):
     if not added_preexisting_data:
         print("Add the preexisting users first!")
     else:
-        User()
+        User("new_user",user_features, training_labels)
 
 
 # add cracked bfs nitin C^(length of the path) * product of 1/(all compatibilities(both directions))
 def matchmake(user_id):
-    pass
+
 
 ##############################################################################################################
 
