@@ -13,9 +13,9 @@ from collections import deque
 
 # the id of a user is just their index / row-1 in the dataframe population
 # first 2 elements are name and neighbors, rest are the trainable features
-saved_database_of_users_in_csv = "population.csv"
+saved_database_of_users_in_csv = "population 1k.csv"
 
-saved_folder_of_linear_classifiers = "Linear Classifiers"
+saved_folder_of_linear_classifiers = "Linear Classifiers 1k"
 
 population = None
 
