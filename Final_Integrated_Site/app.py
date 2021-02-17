@@ -150,7 +150,6 @@ def beginSearch():
 def continueSearch():
     session['training labels'][-1][1] = request.form['profileRating']
     session.modified = True
-    print(session['training labels'])
 
     if len(session['training labels']) >= 20:
         #call function which returns matrix of candidates and their attributes
@@ -237,14 +236,10 @@ def continueSearch():
                                id=nm.population.loc[session['id'], "name"])
     else:
         features = returnRandomProfile()
-        for i in session:
-            print(i, session[i])
-        print("hi")
-        print(features[-1])
-        print(session['training labels'])
+
         session['training labels'].append([features[-1], 0])
         session.modified = True
-        print(session['training labels'])
+
         name = features[0]
         age = features[2]
         status= features[3]
