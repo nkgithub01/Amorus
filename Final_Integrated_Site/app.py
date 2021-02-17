@@ -13,12 +13,14 @@ app.secret_key = secrets.token_bytes(32)
 def home():
     return render_template('index.html')
 
+
 @app.route('/matchmaker', methods=['GET', 'POST'])
 def matchmaker():
     if 'id' in session:
         return render_template('matchmake.html', id=nm.population.loc[session['id'], "name"])
     else:
         return render_template("login.html")
+
 
 @app.route("/signIn", methods=['GET','POST'])
 def signIn():
@@ -103,13 +105,11 @@ def uploadData():
 @app.route("/continueSearch", methods=['GET','POST'])
 def continueSearch():
     needs_to_refill = False
-    print("sup")
+
     try:
-        print("trying")
         session['training labels'][-1][1] = float(request.form['profileRating'])
-        print("worked")
         session.modified = True
-        print(session['training labels'])
+
     except Exception as e:
         needs_to_refill = True
 
